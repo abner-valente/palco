@@ -1,0 +1,299 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #0f0c12;
+  color: #ddd;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
+  user-select: none;
+}
+
+#app {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Paleta lateral */
+#palette {
+  display: flex;
+  width: 280px;
+  flex: 0 0 280px;
+  background: #1c1820;
+  border-right: 2px solid #3c3741;
+}
+
+.palette-col {
+  width: 140px;
+  flex: 0 0 140px;
+  overflow-y: auto;
+  padding: 16px 0;
+  border-right: 1px solid #3c3741;
+}
+
+.palette-col:last-child {
+  border-right: none;
+}
+
+.palette-col::-webkit-scrollbar {
+  width: 6px;
+}
+.palette-col::-webkit-scrollbar-thumb {
+  background: #6e6473;
+  border-radius: 3px;
+}
+
+.palette-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 0;
+  cursor: grab;
+  touch-action: none;
+}
+
+.palette-item img,
+.palette-item .shape-fallback {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.palette-item .label {
+  font-size: 12px;
+  color: #ccc;
+  pointer-events: none;
+}
+
+.shape-fallback {
+  border: 2px solid #3c2814;
+}
+
+.shape-fallback.cubo {
+  background: #deb887;
+  border-radius: 4px;
+}
+
+.shape-fallback.cilindro {
+  background: #deb887;
+  border-radius: 50%;
+}
+
+.shape-fallback.prisma {
+  background: #8b653c;
+  border-radius: 3px;
+}
+
+.base-fallback {
+  border: 2px solid #3c2814;
+  border-radius: 50%;
+}
+
+/* Area do palco */
+#stage-wrapper {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  background: #0f0c12;
+}
+
+#stage-bg-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+#stage-bg {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+#connections-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+#connections-layer line {
+  pointer-events: stroke;
+  cursor: pointer;
+}
+
+#items-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.piece, .base {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  touch-action: none;
+  cursor: grab;
+}
+
+.piece img, .base img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  object-fit: contain;
+}
+
+.piece .shape-fallback {
+  width: 100%;
+  height: 100%;
+}
+
+.piece .label-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  font-size: 13px;
+  color: #1a1a1a;
+  pointer-events: none;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.base .base-fallback {
+  width: 100%;
+  height: 60%;
+  border-radius: 50%;
+}
+
+.piece.connect-source {
+  outline: 3px solid #ffdc3c;
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+
+#trash {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: #37292c;
+  border: 2px solid #6e5f64;
+  color: #beafb4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+#trash.highlight {
+  background: #782828;
+  border-color: #e65a5a;
+  color: #f0dcdc;
+}
+
+#zoom-control {
+  position: absolute;
+  right: 20px;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+#zoom-label {
+  font-size: 13px;
+  color: #b4b4b4;
+}
+
+.zoom-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.zoom-row button {
+  width: 24px;
+  height: 24px;
+  background: #3c3741;
+  border: 1px solid #786d7d;
+  color: #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#zoom-slider {
+  width: 160px;
+}
+
+#top-bar {
+  position: absolute;
+  right: 18px;
+  top: 14px;
+  display: flex;
+  gap: 8px;
+}
+
+#top-bar button, .file-btn {
+  background: #2d5f3c;
+  border: 1px solid #5aa06e;
+  color: #ebf5eb;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.file-btn {
+  background: #2d4d5f;
+  border-color: #5a8ca0;
+  position: relative;
+}
+
+.file-btn input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+#help-bar {
+  position: absolute;
+  left: 12px;
+  bottom: 4px;
+  font-size: 12px;
+  color: #aaa;
+  pointer-events: none;
+}
+
+#label-editor {
+  position: fixed;
+  background: #fafafa;
+  border: 1px solid #000;
+  padding: 3px 6px;
+  z-index: 50;
+}
+
+#label-editor.hidden {
+  display: none;
+}
+
+#label-input {
+  font-weight: bold;
+  font-size: 13px;
+  border: none;
+  outline: none;
+  width: 110px;
+}
