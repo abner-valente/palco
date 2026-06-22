@@ -136,7 +136,7 @@ class Connection:
 
     def draw(self, surface: pygame.Surface, selected: bool = False):
         color = (255, 220, 60) if selected else (240, 240, 240)
-        width = 4 if selected else 2
+        width = 7 if selected else 5
         pygame.draw.line(
             surface, color,
             (self.piece_a.x, self.piece_a.y), (self.piece_b.x, self.piece_b.y),

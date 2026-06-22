@@ -3,14 +3,18 @@
 Controles:
   - Arrastar com o botao esquerdo: mover peca/base, ou pegar uma nova
     peca/base da paleta lateral.
+  - Scroll do mouse sobre a paleta: rola a coluna de pecas ou de bases
+    (tambem da para arrastar a barra de rolagem na borda da coluna).
   - Clique com botao direito numa peca: entra em modo de conexao,
     clique em outra peca para ligar (ou ESC para cancelar).
   - Clique com botao direito numa base ja no palco: remove a base.
+  - Arrastar uma peca/base para o icone de lixeira: remove o item.
   - Del (ou Backspace) com o mouse sobre uma peca/base: remove o item
     (e as conexoes ligadas a ele, se for peca).
   - Tecla L com o mouse sobre uma peca: abre digitacao de rotulo
     (Enter confirma, ESC cancela).
-  - Ctrl+S salva a sessao em sessao.json, Ctrl+L carrega.
+  - Ctrl+S ou botao "Salvar": salva a sessao em sessao.json.
+  - Ctrl+L carrega a sessao salva.
   - A janela e redimensionavel; o palco se ajusta ao espaco disponivel.
 """
 import json
@@ -52,6 +56,16 @@ PIECE_SHAPES_SIZES = [
     ("prisma", "P"), ("prisma", "M"), ("prisma", "G"),
 ]
 
+PALETTE_ITEM_STEP = 100
+PALETTE_ITEM_TOP = 50
+PALETTE_BOTTOM_PAD = 40
+SCROLLBAR_WIDTH = 5
+SCROLL_WHEEL_STEP = 40
+
+SAVE_BUTTON_RECT = pygame.Rect(0, 0, 120, 32)  # posicao real definida em save_button_rect()
+
+TRASH_SIZE = 48
+
 
 def build_palette_items():
     """Modelos de peca (coluna 1) e de base (coluna 2) da paleta lateral.
@@ -65,8 +79,28 @@ def build_palette_items():
     return piece_items, base_items
 
 
-def column_positions(items, col_center_x, step=100, top=50):
-    return [(col_center_x, top + i * step) for i in range(len(items))]
+def column_content_height(items):
+    return PALETTE_ITEM_TOP + PALETTE_ITEM_STEP * len(items) + PALETTE_BOTTOM_PAD
+
+
+def column_max_scroll(items, height):
+    return max(0, column_content_height(items) - height)
+
+
+def column_positions(items, col_center_x, scroll):
+    return [(col_center_x, PALETTE_ITEM_TOP + i * PALETTE_ITEM_STEP - scroll) for i in range(len(items))]
+
+
+def scrollbar_thumb_rect(col_left, col_width, height, items, scroll):
+    content_height = column_content_height(items)
+    if content_height <= height:
+        return None
+    track_x = col_left + col_width - SCROLLBAR_WIDTH - 3
+    thumb_h = max(24, int(height * height / content_height))
+    max_scroll = column_max_scroll(items, height)
+    t = scroll / max_scroll if max_scroll > 0 else 0
+    thumb_y = int(t * (height - thumb_h))
+    return pygame.Rect(track_x, thumb_y, SCROLLBAR_WIDTH, thumb_h)
 
 
 def compute_stage_layout(width, height):
@@ -157,11 +191,57 @@ def draw_zoom_slider(surface, font, width, height, zoom):
     surface.blit(zoom_label, (bar_rect.x, bar_rect.y - 18))
 
 
-def draw_palette(surface, font, height, piece_items, piece_pos, base_items, base_pos):
-    pygame.draw.rect(surface, PALETTE_BG, pygame.Rect(0, 0, PALETTE_TOTAL_WIDTH, height))
-    pygame.draw.line(surface, DIVIDER_COLOR, (PALETTE_COL_WIDTH, 0), (PALETTE_COL_WIDTH, height), width=1)
-    pygame.draw.line(surface, DIVIDER_COLOR, (PALETTE_TOTAL_WIDTH, 0), (PALETTE_TOTAL_WIDTH, height), width=2)
+def save_button_rect(width):
+    return pygame.Rect(width - 140, 14, 120, 32)
 
+
+def draw_save_button(surface, font, width):
+    rect = save_button_rect(width)
+    pygame.draw.rect(surface, (45, 95, 60), rect, border_radius=6)
+    pygame.draw.rect(surface, (90, 160, 110), rect, width=1, border_radius=6)
+    text = font.render("Salvar (Ctrl+S)", True, (235, 245, 235))
+    surface.blit(text, (rect.centerx - text.get_width() // 2, rect.centery - text.get_height() // 2))
+
+
+def trash_rect(width, height):
+    x = PALETTE_TOTAL_WIDTH + STAGE_MARGIN // 2
+    y = height - TRASH_SIZE - STAGE_MARGIN // 2
+    return pygame.Rect(x, y, TRASH_SIZE, TRASH_SIZE)
+
+
+def draw_trash(surface, width, height, highlighted):
+    rect = trash_rect(width, height)
+    bg_color = (120, 40, 40) if highlighted else (55, 45, 48)
+    border_color = (230, 90, 90) if highlighted else (110, 95, 100)
+    pygame.draw.rect(surface, bg_color, rect, border_radius=8)
+    pygame.draw.rect(surface, border_color, rect, width=2, border_radius=8)
+
+    icon_color = (240, 220, 220) if highlighted else (190, 175, 180)
+    cx, cy = rect.center
+    body_w, body_h = rect.width * 0.5, rect.height * 0.42
+    body_rect = pygame.Rect(cx - body_w / 2, cy - body_h / 2 + 4, body_w, body_h)
+    pygame.draw.rect(surface, icon_color, body_rect, width=2, border_radius=3)
+
+    lid_y = body_rect.top - 2
+    pygame.draw.line(surface, icon_color, (body_rect.left - 4, lid_y), (body_rect.right + 4, lid_y), width=2)
+    pygame.draw.line(surface, icon_color, (cx - 5, lid_y - 6), (cx + 5, lid_y - 6), width=2)
+    pygame.draw.line(surface, icon_color, (cx - 5, lid_y - 6), (cx - 5, lid_y), width=2)
+    pygame.draw.line(surface, icon_color, (cx + 5, lid_y - 6), (cx + 5, lid_y), width=2)
+
+    for dx in (-body_w * 0.2, 0, body_w * 0.2):
+        pygame.draw.line(
+            surface, icon_color,
+            (cx + dx, body_rect.top + 4), (cx + dx, body_rect.bottom - 4),
+            width=1,
+        )
+
+
+def draw_palette(surface, font, height, piece_items, piece_pos, base_items, base_pos, piece_scroll, base_scroll):
+    pygame.draw.rect(surface, PALETTE_BG, pygame.Rect(0, 0, PALETTE_TOTAL_WIDTH, height))
+
+    previous_clip = surface.get_clip()
+
+    surface.set_clip(pygame.Rect(0, 0, PALETTE_COL_WIDTH, height))
     for item, (x, y) in zip(piece_items, piece_pos):
         _, shape, size = item
         r = SIZE_PX[size] * 0.7
@@ -181,7 +261,9 @@ def draw_palette(surface, font, height, piece_items, piece_pos, base_items, base
             pygame.draw.ellipse(surface, (60, 40, 20), rect, width=2)
         label = font.render(f"{shape[:3]} {size}", True, (200, 200, 200))
         surface.blit(label, (x - label.get_width() // 2, y + r + 4))
+    surface.set_clip(previous_clip)
 
+    surface.set_clip(pygame.Rect(PALETTE_COL_WIDTH, 0, PALETTE_COL_WIDTH, height))
     for item, (x, y) in zip(base_items, base_pos):
         _, color_name, _ = item
         r = 18
@@ -193,6 +275,17 @@ def draw_palette(surface, font, height, piece_items, piece_pos, base_items, base
             color = BASE_COLORS[color_name]
             pygame.draw.ellipse(surface, color, rect)
             pygame.draw.ellipse(surface, (60, 40, 20), rect, width=2)
+    surface.set_clip(previous_clip)
+
+    pygame.draw.line(surface, DIVIDER_COLOR, (PALETTE_COL_WIDTH, 0), (PALETTE_COL_WIDTH, height), width=1)
+    pygame.draw.line(surface, DIVIDER_COLOR, (PALETTE_TOTAL_WIDTH, 0), (PALETTE_TOTAL_WIDTH, height), width=2)
+
+    piece_thumb = scrollbar_thumb_rect(0, PALETTE_COL_WIDTH, height, piece_items, piece_scroll)
+    if piece_thumb is not None:
+        pygame.draw.rect(surface, (110, 100, 115), piece_thumb, border_radius=3)
+    base_thumb = scrollbar_thumb_rect(PALETTE_COL_WIDTH, PALETTE_COL_WIDTH, height, base_items, base_scroll)
+    if base_thumb is not None:
+        pygame.draw.rect(surface, (110, 100, 115), base_thumb, border_radius=3)
 
 
 def main():
@@ -202,11 +295,10 @@ def main():
     pygame.display.set_caption("Palco de Papeis - prototipo")
     clock = pygame.time.Clock()
     font = pygame.font.SysFont("arial", 14)
+    piece_label_font = pygame.font.SysFont("arial", 14, bold=True)
     label_font = pygame.font.SysFont("arial", 13, bold=True)
 
     piece_items, base_items = build_palette_items()
-    piece_pos = column_positions(piece_items, PALETTE_COL_WIDTH // 2)
-    base_pos = column_positions(base_items, PALETTE_COL_WIDTH + PALETTE_COL_WIDTH // 2)
 
     pieces: list[Piece] = []
     bases: list[Base] = []
@@ -219,9 +311,12 @@ def main():
     editing_label: Piece | None = None
     label_buffer = ""
     selected_connection: Connection | None = None
-    CONNECTION_CLICK_THRESHOLD = 6
+    CONNECTION_CLICK_THRESHOLD = 9
     zoom_level = ZOOM_DEFAULT
     dragging_slider = False
+    piece_scroll = 0
+    base_scroll = 0
+    dragging_scrollbar = None  # "piece" ou "base"
 
     def new_id():
         nonlocal next_id
@@ -253,6 +348,15 @@ def main():
     def remove_piece(piece):
         pieces.remove(piece)
         connections[:] = [c for c in connections if not c.involves(piece)]
+
+    def delete_dragged_object(obj):
+        nonlocal connect_source
+        if isinstance(obj, Piece):
+            if connect_source is obj:
+                connect_source = None
+            remove_piece(obj)
+        elif isinstance(obj, Base):
+            bases.remove(obj)
 
     def save_session():
         data = {
@@ -310,6 +414,13 @@ def main():
 
     running = True
     while running:
+        piece_max_scroll = column_max_scroll(piece_items, height)
+        base_max_scroll = column_max_scroll(base_items, height)
+        piece_scroll = max(0, min(piece_scroll, piece_max_scroll))
+        base_scroll = max(0, min(base_scroll, base_max_scroll))
+        piece_pos = column_positions(piece_items, PALETTE_COL_WIDTH // 2, piece_scroll)
+        base_pos = column_positions(base_items, PALETTE_COL_WIDTH + PALETTE_COL_WIDTH // 2, base_scroll)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -348,11 +459,9 @@ def main():
                         piece = find_piece_at(pos)
                         base = find_base_at(pos)
                         if piece is not None:
-                            if connect_source is piece:
-                                connect_source = None
-                            remove_piece(piece)
+                            delete_dragged_object(piece)
                         elif base is not None:
-                            bases.remove(base)
+                            delete_dragged_object(base)
 
             elif event.type == pygame.MOUSEBUTTONDOWN and editing_label is None:
                 pos = event.pos
@@ -361,13 +470,23 @@ def main():
                     handle_x = zoom_to_handle_x(bar_rect, zoom_level)
                     handle_hit = pygame.Rect(0, 0, SLIDER_HANDLE_RADIUS * 2, SLIDER_HANDLE_RADIUS * 2)
                     handle_hit.center = (int(handle_x), bar_rect.centery)
-                    if minus_rect.collidepoint(pos):
+
+                    piece_thumb = scrollbar_thumb_rect(0, PALETTE_COL_WIDTH, height, piece_items, piece_scroll)
+                    base_thumb = scrollbar_thumb_rect(PALETTE_COL_WIDTH, PALETTE_COL_WIDTH, height, base_items, base_scroll)
+
+                    if save_button_rect(width).collidepoint(pos):
+                        save_session()
+                    elif minus_rect.collidepoint(pos):
                         zoom_level = max(ZOOM_MIN, zoom_level - ZOOM_STEP)
                     elif plus_rect.collidepoint(pos):
                         zoom_level = min(ZOOM_MAX, zoom_level + ZOOM_STEP)
                     elif handle_hit.collidepoint(pos) or bar_rect.inflate(0, 12).collidepoint(pos):
                         dragging_slider = True
                         zoom_level = handle_x_to_zoom(bar_rect, pos[0])
+                    elif piece_thumb is not None and piece_thumb.inflate(6, 0).collidepoint(pos):
+                        dragging_scrollbar = "piece"
+                    elif base_thumb is not None and base_thumb.inflate(6, 0).collidepoint(pos):
+                        dragging_scrollbar = "base"
                     elif pos[0] < PALETTE_TOTAL_WIDTH:
                         items = piece_items if pos[0] < PALETTE_COL_WIDTH else base_items
                         positions = piece_pos if pos[0] < PALETTE_COL_WIDTH else base_pos
@@ -415,25 +534,41 @@ def main():
                             _, color_name, _ = dragging_new_item
                             bases.append(Base(color_name, pos[0], pos[1], new_id()))
                     dragging_new_item = None
+                if dragging_obj is not None and trash_rect(width, height).collidepoint(event.pos):
+                    delete_dragged_object(dragging_obj)
                 dragging_obj = None
                 dragging_slider = False
+                dragging_scrollbar = None
 
             elif event.type == pygame.MOUSEMOTION:
                 if dragging_slider:
                     bar_rect, _, _ = slider_layout(width, height)
                     zoom_level = handle_x_to_zoom(bar_rect, event.pos[0])
+                if dragging_scrollbar == "piece":
+                    content_height = column_content_height(piece_items)
+                    if content_height > height:
+                        piece_scroll += event.rel[1] * content_height / height
+                elif dragging_scrollbar == "base":
+                    content_height = column_content_height(base_items)
+                    if content_height > height:
+                        base_scroll += event.rel[1] * content_height / height
                 if dragging_obj is not None:
                     dragging_obj.x, dragging_obj.y = event.pos
 
             elif event.type == pygame.MOUSEWHEEL and editing_label is None:
                 pos = pygame.mouse.get_pos()
-                piece = find_piece_at(pos)
-                if piece is not None:
-                    piece.resize(event.y * RESIZE_STEP)
+                if pos[0] < PALETTE_COL_WIDTH:
+                    piece_scroll -= event.y * SCROLL_WHEEL_STEP
+                elif pos[0] < PALETTE_TOTAL_WIDTH:
+                    base_scroll -= event.y * SCROLL_WHEEL_STEP
                 else:
-                    base = find_base_at(pos)
-                    if base is not None:
-                        base.resize(event.y * RESIZE_STEP)
+                    piece = find_piece_at(pos)
+                    if piece is not None:
+                        piece.resize(event.y * RESIZE_STEP)
+                    else:
+                        base = find_base_at(pos)
+                        if base is not None:
+                            base.resize(event.y * RESIZE_STEP)
 
         keys = pygame.key.get_pressed()
         if editing_label is None and keys[pygame.K_l]:
@@ -452,13 +587,17 @@ def main():
         for conn in connections:
             conn.draw(screen, selected=(conn is selected_connection))
         for piece in pieces:
-            piece.draw(screen, font)
+            piece.draw(screen, piece_label_font)
         if connect_source is not None:
             pygame.draw.circle(screen, (255, 255, 0), (int(connect_source.x), int(connect_source.y)),
                                 connect_source.radius + 6, width=2)
 
-        draw_palette(screen, font, height, piece_items, piece_pos, base_items, base_pos)
+        trash_highlighted = dragging_obj is not None and trash_rect(width, height).collidepoint(pygame.mouse.get_pos())
+        draw_trash(screen, width, height, trash_highlighted)
+
+        draw_palette(screen, font, height, piece_items, piece_pos, base_items, base_pos, piece_scroll, base_scroll)
         draw_zoom_slider(screen, font, width, height, zoom_level)
+        draw_save_button(screen, font, width)
 
         if dragging_new_item is not None:
             mx, my = pygame.mouse.get_pos()
@@ -480,7 +619,7 @@ def main():
             screen.blit(text, (box.x + 4, box.y + 3))
 
         help_text = (
-            "Arraste da paleta | Scroll sobre peca/base: redimensionar | Barra de zoom: redimensionar palco | "
+            "Arraste da paleta | Scroll: redimensionar peca/base ou rolar paleta | Arraste p/ lixeira: remover | "
             "Botao direito em peca: conectar | Clique numa linha: selecionar | Del: remover | "
             "L: rotular | Ctrl+S salvar | Ctrl+L carregar"
         )
