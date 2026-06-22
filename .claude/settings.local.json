@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(pip show *)",
-      "Bash(pip install *)"
+      "Bash(pip install *)",
+      "Bash(\"./venv/Scripts/python.exe\")",
+      "Bash(./venv/Scripts/python.exe -c ' *)",
+      "Bash(timeout 4 \"./venv/Scripts/python.exe\" main.py)",
+      "Bash(\"./venv/Scripts/python.exe\" -c \"from PIL import Image; im=Image.open\\('assets/stage/palco.png'\\); print\\(im.size, im.mode\\)\")"
     ]
   }
 }
