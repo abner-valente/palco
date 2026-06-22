@@ -4,7 +4,7 @@
     {
       "name": "palco-web",
       "runtimeExecutable": "C:\\Users\\lvalente\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
-      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "web"],
+      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "docs"],
       "port": 8765
     }
   ]
