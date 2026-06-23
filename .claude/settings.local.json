@@ -9,7 +9,8 @@
       "Bash(\"./venv/Scripts/python.exe\" -c \"from PIL import Image; im=Image.open\\('assets/stage/palco.png'\\); print\\(im.size, im.mode\\)\")",
       "Bash(\"./venv/Scripts/python.exe\" -m py_compile main.py pieces.py)",
       "Bash(ls .claude)",
-      "Bash(mkdir -p .claude)"
+      "Bash(mkdir -p .claude)",
+      "Bash(netstat -ano)"
     ]
   }
 }
