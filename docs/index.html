@@ -7,7 +7,35 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app">
+  <div id="auth-overlay" class="overlay hidden">
+    <form id="auth-form" class="auth-card">
+      <h1>Palco de Papeis</h1>
+      <h2 id="auth-mode-label">Entrar</h2>
+      <label>
+        Email
+        <input type="email" id="auth-email" required autocomplete="email">
+      </label>
+      <label>
+        Senha
+        <input type="password" id="auth-password" required autocomplete="current-password" minlength="6">
+      </label>
+      <p id="auth-error" class="form-error"></p>
+      <button type="submit" id="auth-submit">Entrar</button>
+      <a href="#" id="auth-toggle-mode">Nao tem conta? Criar uma</a>
+    </form>
+  </div>
+
+  <div id="paywall-overlay" class="overlay hidden">
+    <div class="auth-card">
+      <h1>Palco de Papeis</h1>
+      <p>Sua conta ainda nao tem uma assinatura ativa.</p>
+      <p id="paywall-error" class="form-error"></p>
+      <button type="button" id="btn-subscribe">Assinar agora</button>
+      <button type="button" id="btn-logout" class="secondary">Sair</button>
+    </div>
+  </div>
+
+  <div id="app" class="hidden">
     <aside id="palette">
       <div class="palette-col" id="col-pieces"></div>
       <div class="palette-col" id="col-bases"></div>
@@ -42,6 +70,7 @@
           Carregar (.json)
           <input type="file" id="load-input" accept="application/json">
         </label>
+        <button id="btn-logout-app" class="secondary">Sair</button>
       </div>
 
       <div id="help-bar">
@@ -55,6 +84,9 @@
     <input type="text" id="label-input" maxlength="18">
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
