@@ -2,3 +2,4 @@ venv/
 __pycache__/
 *.pyc
 sessao.json
+supabase/.temp/

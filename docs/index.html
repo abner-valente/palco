@@ -7,7 +7,77 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app">
+  <div id="auth-overlay" class="overlay hidden">
+    <form id="auth-form" class="auth-card">
+      <h1>Palco de Papeis</h1>
+      <h2 id="auth-mode-label">Entrar</h2>
+      <label>
+        Email
+        <input type="email" id="auth-email" required autocomplete="email">
+      </label>
+      <label>
+        Senha
+        <input type="password" id="auth-password" required autocomplete="current-password" minlength="6">
+      </label>
+      <p id="auth-error" class="form-error"></p>
+      <button type="submit" id="auth-submit">Entrar</button>
+      <a href="#" id="auth-toggle-mode">Nao tem conta? Criar uma</a>
+    </form>
+  </div>
+
+  <div id="paywall-overlay" class="overlay hidden">
+    <div class="auth-card">
+      <h1>Palco de Papeis</h1>
+      <p>Sua conta ainda nao tem uma assinatura ativa.</p>
+      <p id="paywall-error" class="form-error"></p>
+      <button type="button" id="btn-subscribe">Assinar agora</button>
+      <button type="button" id="btn-logout" class="secondary">Sair</button>
+    </div>
+  </div>
+
+  <div id="profile-overlay" class="overlay hidden">
+    <div class="auth-card">
+      <h1>Meu perfil</h1>
+      <label>
+        Email
+        <input type="email" id="profile-email" disabled>
+      </label>
+      <h2>Trocar senha</h2>
+      <form id="profile-password-form">
+        <label>
+          Nova senha
+          <input type="password" id="profile-new-password" required minlength="6" autocomplete="new-password">
+        </label>
+        <label>
+          Confirmar nova senha
+          <input type="password" id="profile-confirm-password" required minlength="6" autocomplete="new-password">
+        </label>
+        <p id="profile-password-message" class="form-error"></p>
+        <button type="submit">Atualizar senha</button>
+      </form>
+      <h2>Assinatura</h2>
+      <p id="profile-billing-message" class="form-error"></p>
+      <button type="button" id="btn-manage-billing">Gerenciar assinatura</button>
+      <button type="button" id="btn-profile-back" class="secondary">Voltar ao palco</button>
+    </div>
+  </div>
+
+  <div id="app" class="hidden">
+    <header id="app-header">
+      <span id="app-title">Palco de Papeis</span>
+      <div id="user-menu">
+        <button type="button" id="user-menu-btn" aria-haspopup="true" aria-expanded="false">
+          <span id="user-email">...</span>
+          <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div id="user-menu-dropdown" class="hidden">
+          <button type="button" id="menu-profile">Meu perfil</button>
+          <button type="button" id="menu-logout">Sair</button>
+        </div>
+      </div>
+    </header>
+
+    <div id="app-body">
     <aside id="palette">
       <div class="palette-col" id="col-pieces"></div>
       <div class="palette-col" id="col-bases"></div>
@@ -49,12 +119,16 @@
         Clique numa linha: selecionar | Del / arraste p/ lixeira: remover | Duplo clique: rotular
       </div>
     </main>
+    </div>
   </div>
 
   <div id="label-editor" class="hidden">
     <input type="text" id="label-input" maxlength="18">
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
