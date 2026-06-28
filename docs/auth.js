@@ -23,6 +23,10 @@ const authToggleLink = document.getElementById("auth-toggle-mode");
 const logoutBtn = document.getElementById("btn-logout");
 const subscribeBtn = document.getElementById("btn-subscribe");
 const paywallError = document.getElementById("paywall-error");
+const userEmailLabel = document.getElementById("user-email");
+const userMenuBtn = document.getElementById("user-menu-btn");
+const userMenuDropdown = document.getElementById("user-menu-dropdown");
+const menuLogoutBtn = document.getElementById("menu-logout");
 
 let authMode = "login"; // "login" ou "signup"
 
@@ -65,11 +69,30 @@ authForm.addEventListener("submit", async (evt) => {
 });
 
 async function handleLogout() {
+  closeUserMenu();
   await supabaseClient.auth.signOut();
   await refreshAccessState();
 }
 logoutBtn.addEventListener("click", handleLogout);
-document.getElementById("btn-logout-app").addEventListener("click", handleLogout);
+menuLogoutBtn.addEventListener("click", handleLogout);
+
+function closeUserMenu() {
+  userMenuDropdown.classList.add("hidden");
+  userMenuBtn.setAttribute("aria-expanded", "false");
+}
+
+userMenuBtn.addEventListener("click", (evt) => {
+  evt.stopPropagation();
+  const isOpen = !userMenuDropdown.classList.contains("hidden");
+  userMenuDropdown.classList.toggle("hidden", isOpen);
+  userMenuBtn.setAttribute("aria-expanded", String(!isOpen));
+});
+
+document.addEventListener("click", (evt) => {
+  if (!document.getElementById("user-menu").contains(evt.target)) {
+    closeUserMenu();
+  }
+});
 
 subscribeBtn.addEventListener("click", async () => {
   paywallError.textContent = "";
@@ -115,6 +138,8 @@ async function refreshAccessState() {
   }
   const active = await hasActiveSubscription(session.user.id);
   if (active) {
+    userEmailLabel.textContent = session.user.email;
+    closeUserMenu();
     showOnly("app");
   } else {
     subscribeBtn.disabled = false;

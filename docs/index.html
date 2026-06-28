@@ -36,6 +36,20 @@
   </div>
 
   <div id="app" class="hidden">
+    <header id="app-header">
+      <span id="app-title">Palco de Papeis</span>
+      <div id="user-menu">
+        <button type="button" id="user-menu-btn" aria-haspopup="true" aria-expanded="false">
+          <span id="user-email">...</span>
+          <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div id="user-menu-dropdown" class="hidden">
+          <button type="button" id="menu-logout">Sair</button>
+        </div>
+      </div>
+    </header>
+
+    <div id="app-body">
     <aside id="palette">
       <div class="palette-col" id="col-pieces"></div>
       <div class="palette-col" id="col-bases"></div>
@@ -70,7 +84,6 @@
           Carregar (.json)
           <input type="file" id="load-input" accept="application/json">
         </label>
-        <button id="btn-logout-app" class="secondary">Sair</button>
       </div>
 
       <div id="help-bar">
@@ -78,6 +91,7 @@
         Clique numa linha: selecionar | Del / arraste p/ lixeira: remover | Duplo clique: rotular
       </div>
     </main>
+    </div>
   </div>
 
   <div id="label-editor" class="hidden">

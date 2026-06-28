@@ -14,8 +14,88 @@ html, body {
 
 #app {
   display: flex;
+  flex-direction: column;
   width: 100vw;
   height: 100vh;
+}
+
+#app-header {
+  flex: 0 0 auto;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  background: #1c1820;
+  border-bottom: 2px solid #3c3741;
+}
+
+#app-title {
+  font-size: 13px;
+  color: #ccc;
+}
+
+#user-menu {
+  position: relative;
+}
+
+#user-menu-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid #3c3741;
+  border-radius: 6px;
+  color: #ddd;
+  padding: 5px 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+#user-menu-btn:hover {
+  border-color: #6e6473;
+}
+
+#user-email {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#user-menu-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  background: #1c1820;
+  border: 1px solid #3c3741;
+  border-radius: 6px;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  z-index: 20;
+}
+
+#user-menu-dropdown button {
+  background: transparent;
+  border: none;
+  color: #ddd;
+  text-align: left;
+  padding: 7px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+#user-menu-dropdown button:hover {
+  background: #3c3741;
+}
+
+#app-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
 }
 
 .hidden {
