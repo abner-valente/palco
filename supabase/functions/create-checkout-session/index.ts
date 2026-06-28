@@ -9,10 +9,11 @@
 //   SITE_URL               - ex: https://<usuario>.github.io/<repo>
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import Stripe from "https://esm.sh/stripe@14?target=deno";
+import Stripe from "https://esm.sh/stripe@14?target=denonext";
 
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") ?? "", {
   apiVersion: "2023-10-16",
+  httpClient: Stripe.createFetchHttpClient(),
 });
 
 const supabaseAdmin = createClient(
@@ -56,9 +57,13 @@ Deno.serve(async (req) => {
         metadata: { supabase_user_id: user.id },
       });
       customerId = customer.id;
-      await supabaseAdmin
+      const { error: upsertError } = await supabaseAdmin
         .from("subscriptions")
         .upsert({ user_id: user.id, stripe_customer_id: customerId, status: "inactive" });
+      if (upsertError) {
+        console.error("Falha ao gravar subscriptions:", upsertError);
+        throw upsertError;
+      }
     }
 
     const siteUrl = Deno.env.get("SITE_URL") ?? "https://example.github.io/palco";
@@ -75,7 +80,8 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
-    return new Response(JSON.stringify({ error: String(err) }), {
+    const message = err instanceof Error ? err.message : JSON.stringify(err);
+    return new Response(JSON.stringify({ error: message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

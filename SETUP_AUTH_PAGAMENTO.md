@@ -35,8 +35,8 @@ supabase functions deploy create-checkout-session
 supabase functions deploy stripe-webhook --no-verify-jwt
 ```
 
-Depois do deploy, a CLI mostra a URL de cada function. Preencha `functionsUrl`
-em `docs/config.js` com a base dessa URL (sem o nome da function no final).
+Preencha `functionsUrl` em `docs/config.js` com `<SUPABASE_URL>/functions/v1`
+(ex: `https://SEU_PROJETO.supabase.co/functions/v1`).
 
 ## 4. Webhook do Stripe
 

@@ -10,10 +10,11 @@
 //   SUPABASE_SERVICE_ROLE_KEY
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import Stripe from "https://esm.sh/stripe@14?target=deno";
+import Stripe from "https://esm.sh/stripe@14?target=denonext";
 
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") ?? "", {
   apiVersion: "2023-10-16",
+  httpClient: Stripe.createFetchHttpClient(),
 });
 
 const supabaseAdmin = createClient(
@@ -29,7 +30,7 @@ async function upsertSubscriptionFromStripe(subscriptionId: string, customerId: 
   const userId = (customer as Stripe.Customer).metadata?.supabase_user_id;
   if (!userId) return;
 
-  await supabaseAdmin.from("subscriptions").upsert({
+  const { error } = await supabaseAdmin.from("subscriptions").upsert({
     user_id: userId,
     stripe_customer_id: customerId,
     stripe_subscription_id: subscription.id,
@@ -37,6 +38,10 @@ async function upsertSubscriptionFromStripe(subscriptionId: string, customerId: 
     current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
     updated_at: new Date().toISOString(),
   });
+  if (error) {
+    console.error("Falha ao gravar subscriptions:", error);
+    throw error;
+  }
 }
 
 Deno.serve(async (req) => {
