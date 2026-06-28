@@ -12,6 +12,7 @@ const supabaseClient = window.supabase.createClient(
 
 const authOverlay = document.getElementById("auth-overlay");
 const paywallOverlay = document.getElementById("paywall-overlay");
+const profileOverlay = document.getElementById("profile-overlay");
 const appRoot = document.getElementById("app");
 const authForm = document.getElementById("auth-form");
 const authEmail = document.getElementById("auth-email");
@@ -27,12 +28,23 @@ const userEmailLabel = document.getElementById("user-email");
 const userMenuBtn = document.getElementById("user-menu-btn");
 const userMenuDropdown = document.getElementById("user-menu-dropdown");
 const menuLogoutBtn = document.getElementById("menu-logout");
+const menuProfileBtn = document.getElementById("menu-profile");
+const profileEmail = document.getElementById("profile-email");
+const profilePasswordForm = document.getElementById("profile-password-form");
+const profileNewPassword = document.getElementById("profile-new-password");
+const profileConfirmPassword = document.getElementById("profile-confirm-password");
+const profilePasswordMessage = document.getElementById("profile-password-message");
+const btnProfileBack = document.getElementById("btn-profile-back");
 
 let authMode = "login"; // "login" ou "signup"
+let lastKnownUserEmail = "";
+let currentView = null;
 
 function showOnly(view) {
+  currentView = view;
   authOverlay.classList.toggle("hidden", view !== "auth");
   paywallOverlay.classList.toggle("hidden", view !== "paywall");
+  profileOverlay.classList.toggle("hidden", view !== "profile");
   appRoot.classList.toggle("hidden", view !== "app");
 }
 
@@ -94,6 +106,39 @@ document.addEventListener("click", (evt) => {
   }
 });
 
+menuProfileBtn.addEventListener("click", () => {
+  closeUserMenu();
+  profileEmail.value = lastKnownUserEmail;
+  profileNewPassword.value = "";
+  profileConfirmPassword.value = "";
+  profilePasswordMessage.classList.remove("form-success");
+  profilePasswordMessage.textContent = "";
+  showOnly("profile");
+});
+
+btnProfileBack.addEventListener("click", () => {
+  showOnly("app");
+});
+
+profilePasswordForm.addEventListener("submit", async (evt) => {
+  evt.preventDefault();
+  profilePasswordMessage.textContent = "";
+  profilePasswordMessage.classList.remove("form-success");
+  if (profileNewPassword.value !== profileConfirmPassword.value) {
+    profilePasswordMessage.textContent = "As senhas nao coincidem.";
+    return;
+  }
+  const { error } = await supabaseClient.auth.updateUser({ password: profileNewPassword.value });
+  if (error) {
+    profilePasswordMessage.textContent = error.message;
+    return;
+  }
+  profileNewPassword.value = "";
+  profileConfirmPassword.value = "";
+  profilePasswordMessage.classList.add("form-success");
+  profilePasswordMessage.textContent = "Senha atualizada com sucesso.";
+});
+
 subscribeBtn.addEventListener("click", async () => {
   paywallError.textContent = "";
   subscribeBtn.disabled = true;
@@ -138,9 +183,12 @@ async function refreshAccessState() {
   }
   const active = await hasActiveSubscription(session.user.id);
   if (active) {
+    lastKnownUserEmail = session.user.email;
     userEmailLabel.textContent = session.user.email;
     closeUserMenu();
-    showOnly("app");
+    if (currentView !== "profile") {
+      showOnly("app");
+    }
   } else {
     subscribeBtn.disabled = false;
     subscribeBtn.textContent = "Assinar agora";

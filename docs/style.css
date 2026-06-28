@@ -184,6 +184,21 @@ html, body {
   margin: 0;
 }
 
+.form-error.form-success {
+  color: #7ad19a;
+}
+
+#profile-password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-card input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Paleta lateral */
 #palette {
   display: flex;

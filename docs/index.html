@@ -35,6 +35,30 @@
     </div>
   </div>
 
+  <div id="profile-overlay" class="overlay hidden">
+    <div class="auth-card">
+      <h1>Meu perfil</h1>
+      <label>
+        Email
+        <input type="email" id="profile-email" disabled>
+      </label>
+      <h2>Trocar senha</h2>
+      <form id="profile-password-form">
+        <label>
+          Nova senha
+          <input type="password" id="profile-new-password" required minlength="6" autocomplete="new-password">
+        </label>
+        <label>
+          Confirmar nova senha
+          <input type="password" id="profile-confirm-password" required minlength="6" autocomplete="new-password">
+        </label>
+        <p id="profile-password-message" class="form-error"></p>
+        <button type="submit">Atualizar senha</button>
+      </form>
+      <button type="button" id="btn-profile-back" class="secondary">Voltar ao palco</button>
+    </div>
+  </div>
+
   <div id="app" class="hidden">
     <header id="app-header">
       <span id="app-title">Palco de Papeis</span>
@@ -44,6 +68,7 @@
           <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div id="user-menu-dropdown" class="hidden">
+          <button type="button" id="menu-profile">Meu perfil</button>
           <button type="button" id="menu-logout">Sair</button>
         </div>
       </div>
