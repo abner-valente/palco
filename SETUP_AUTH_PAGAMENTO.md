@@ -28,12 +28,19 @@ supabase secrets set STRIPE_PRICE_ID=price_xxx
 supabase secrets set SITE_URL=https://SEU_USUARIO.github.io/NOME_DO_REPO
 ```
 
-Publique as duas functions:
+Publique as functions:
 
 ```bash
 supabase functions deploy create-checkout-session
 supabase functions deploy stripe-webhook --no-verify-jwt
+supabase functions deploy create-portal-session
 ```
+
+A `create-portal-session` abre o Stripe Customer Portal (historico de
+faturas + cancelamento de assinatura, hospedado pelo Stripe). Em
+**Settings > Billing > Customer portal** no painel do Stripe, confirme
+que existe uma configuracao (o Stripe cria uma padrao em modo teste
+automaticamente; em modo producao pode ser preciso configurar uma vez).
 
 Preencha `functionsUrl` em `docs/config.js` com `<SUPABASE_URL>/functions/v1`
 (ex: `https://SEU_PROJETO.supabase.co/functions/v1`).

@@ -35,6 +35,8 @@ const profileNewPassword = document.getElementById("profile-new-password");
 const profileConfirmPassword = document.getElementById("profile-confirm-password");
 const profilePasswordMessage = document.getElementById("profile-password-message");
 const btnProfileBack = document.getElementById("btn-profile-back");
+const btnManageBilling = document.getElementById("btn-manage-billing");
+const profileBillingMessage = document.getElementById("profile-billing-message");
 
 let authMode = "login"; // "login" ou "signup"
 let lastKnownUserEmail = "";
@@ -113,6 +115,9 @@ menuProfileBtn.addEventListener("click", () => {
   profileConfirmPassword.value = "";
   profilePasswordMessage.classList.remove("form-success");
   profilePasswordMessage.textContent = "";
+  profileBillingMessage.textContent = "";
+  btnManageBilling.disabled = false;
+  btnManageBilling.textContent = "Gerenciar assinatura";
   showOnly("profile");
 });
 
@@ -137,6 +142,30 @@ profilePasswordForm.addEventListener("submit", async (evt) => {
   profileConfirmPassword.value = "";
   profilePasswordMessage.classList.add("form-success");
   profilePasswordMessage.textContent = "Senha atualizada com sucesso.";
+});
+
+btnManageBilling.addEventListener("click", async () => {
+  profileBillingMessage.textContent = "";
+  btnManageBilling.disabled = true;
+  btnManageBilling.textContent = "Abrindo...";
+  try {
+    const { data: sessionData } = await supabaseClient.auth.getSession();
+    const accessToken = sessionData.session?.access_token;
+    const res = await fetch(`${SUPABASE_CONFIG.functionsUrl}/create-portal-session`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const body = await res.json();
+    if (body.url) {
+      window.location.href = body.url;
+    } else {
+      throw new Error(body.error || "Nao foi possivel abrir o portal de assinatura.");
+    }
+  } catch (err) {
+    profileBillingMessage.textContent = String(err.message || err);
+    btnManageBilling.disabled = false;
+    btnManageBilling.textContent = "Gerenciar assinatura";
+  }
 });
 
 subscribeBtn.addEventListener("click", async () => {
