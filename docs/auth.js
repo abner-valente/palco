@@ -21,6 +21,12 @@ const authError = document.getElementById("auth-error");
 const authModeLabel = document.getElementById("auth-mode-label");
 const authSubmitBtn = document.getElementById("auth-submit");
 const authToggleLink = document.getElementById("auth-toggle-mode");
+const authForgotPasswordLink = document.getElementById("auth-forgot-password");
+const resetOverlay = document.getElementById("reset-overlay");
+const resetForm = document.getElementById("reset-form");
+const resetNewPassword = document.getElementById("reset-new-password");
+const resetConfirmPassword = document.getElementById("reset-confirm-password");
+const resetError = document.getElementById("reset-error");
 const logoutBtn = document.getElementById("btn-logout");
 const subscribeBtn = document.getElementById("btn-subscribe");
 const paywallError = document.getElementById("paywall-error");
@@ -45,6 +51,7 @@ let currentView = null;
 function showOnly(view) {
   currentView = view;
   authOverlay.classList.toggle("hidden", view !== "auth");
+  resetOverlay.classList.toggle("hidden", view !== "reset");
   paywallOverlay.classList.toggle("hidden", view !== "paywall");
   profileOverlay.classList.toggle("hidden", view !== "profile");
   appRoot.classList.toggle("hidden", view !== "app");
@@ -57,11 +64,13 @@ authToggleLink.addEventListener("click", (evt) => {
   authSubmitBtn.textContent = authMode === "login" ? "Entrar" : "Criar conta";
   authToggleLink.textContent =
     authMode === "login" ? "Nao tem conta? Criar uma" : "Ja tem conta? Entrar";
+  authError.classList.remove("form-success");
   authError.textContent = "";
 });
 
 authForm.addEventListener("submit", async (evt) => {
   evt.preventDefault();
+  authError.classList.remove("form-success");
   authError.textContent = "";
   const email = authEmail.value.trim();
   const password = authPassword.value;
@@ -79,6 +88,43 @@ authForm.addEventListener("submit", async (evt) => {
     authError.textContent = "Conta criada. Verifique seu email para confirmar o login.";
     return;
   }
+  await refreshAccessState();
+});
+
+authForgotPasswordLink.addEventListener("click", async (evt) => {
+  evt.preventDefault();
+  authError.classList.remove("form-success");
+  const email = authEmail.value.trim();
+  if (!email) {
+    authError.textContent = "Digite seu email no campo acima primeiro.";
+    return;
+  }
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + window.location.pathname,
+  });
+  if (error) {
+    authError.textContent = error.message;
+    return;
+  }
+  authError.classList.add("form-success");
+  authError.textContent = "Email enviado. Verifique sua caixa de entrada para redefinir a senha.";
+});
+
+resetForm.addEventListener("submit", async (evt) => {
+  evt.preventDefault();
+  resetError.textContent = "";
+  if (resetNewPassword.value !== resetConfirmPassword.value) {
+    resetError.textContent = "As senhas nao coincidem.";
+    return;
+  }
+  const { error } = await supabaseClient.auth.updateUser({ password: resetNewPassword.value });
+  if (error) {
+    resetError.textContent = error.message;
+    return;
+  }
+  resetNewPassword.value = "";
+  resetConfirmPassword.value = "";
+  currentView = null;
   await refreshAccessState();
 });
 
@@ -204,13 +250,16 @@ async function hasActiveSubscription(userId) {
 }
 
 async function refreshAccessState() {
+  if (currentView === "reset") return;
   const { data } = await supabaseClient.auth.getSession();
+  if (currentView === "reset") return;
   const session = data.session;
   if (!session) {
     showOnly("auth");
     return;
   }
   const active = await hasActiveSubscription(session.user.id);
+  if (currentView === "reset") return;
   if (active) {
     lastKnownUserEmail = session.user.email;
     userEmailLabel.textContent = session.user.email;
@@ -225,7 +274,12 @@ async function refreshAccessState() {
   }
 }
 
-supabaseClient.auth.onAuthStateChange(() => {
+supabaseClient.auth.onAuthStateChange((event) => {
+  if (event === "PASSWORD_RECOVERY") {
+    resetError.textContent = "";
+    showOnly("reset");
+    return;
+  }
   refreshAccessState();
 });
 

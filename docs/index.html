@@ -22,6 +22,23 @@
       <p id="auth-error" class="form-error"></p>
       <button type="submit" id="auth-submit">Entrar</button>
       <a href="#" id="auth-toggle-mode">Nao tem conta? Criar uma</a>
+      <a href="#" id="auth-forgot-password">Esqueci minha senha</a>
+    </form>
+  </div>
+
+  <div id="reset-overlay" class="overlay hidden">
+    <form id="reset-form" class="auth-card">
+      <h1>Redefinir senha</h1>
+      <label>
+        Nova senha
+        <input type="password" id="reset-new-password" required minlength="6" autocomplete="new-password">
+      </label>
+      <label>
+        Confirmar nova senha
+        <input type="password" id="reset-confirm-password" required minlength="6" autocomplete="new-password">
+      </label>
+      <p id="reset-error" class="form-error"></p>
+      <button type="submit" id="reset-submit">Salvar nova senha</button>
     </form>
   </div>
 
