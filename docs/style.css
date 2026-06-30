@@ -121,7 +121,8 @@ html, body {
   z-index: 20;
 }
 
-#user-menu-dropdown button {
+#user-menu-dropdown button,
+#user-menu-dropdown a {
   background: transparent;
   border: none;
   color: #ddd;
@@ -130,10 +131,24 @@ html, body {
   border-radius: 4px;
   font-size: 13px;
   cursor: pointer;
+  text-decoration: none;
+  display: block;
 }
 
-#user-menu-dropdown button:hover {
+#user-menu-dropdown button:hover,
+#user-menu-dropdown a:hover {
   background: #3c3741;
+}
+
+.support-link {
+  color: #8fb6f0;
+  font-size: 12px;
+  text-decoration: none;
+  margin-top: 4px;
+}
+
+.support-link:hover {
+  text-decoration: underline;
 }
 
 #app-body {
