@@ -36,6 +36,7 @@ const resetError = document.getElementById("reset-error");
 const logoutBtn = document.getElementById("btn-logout");
 const subscribeBtn = document.getElementById("btn-subscribe");
 const paywallError = document.getElementById("paywall-error");
+const paywallMessage = document.getElementById("paywall-message");
 const userEmailLabel = document.getElementById("user-email");
 const userMenuBtn = document.getElementById("user-menu-btn");
 const userMenuDropdown = document.getElementById("user-menu-dropdown");
@@ -414,15 +415,15 @@ subscribeBtn.addEventListener("click", async () => {
   }
 });
 
-async function hasActiveSubscription(userId) {
+async function getSubscriptionInfo(userId) {
   const { data } = await supabaseClient
     .from("subscriptions")
     .select("status, current_period_end")
     .eq("user_id", userId)
     .maybeSingle();
-  if (!data) return false;
+  if (!data) return { active: false, status: null };
   const stillValid = !data.current_period_end || new Date(data.current_period_end) > new Date();
-  return data.status === "active" && stillValid;
+  return { active: data.status === "active" && stillValid, status: data.status };
 }
 
 async function refreshAccessState() {
@@ -434,7 +435,7 @@ async function refreshAccessState() {
     showOnly("auth");
     return;
   }
-  const active = await hasActiveSubscription(session.user.id);
+  const { active, status } = await getSubscriptionInfo(session.user.id);
   if (currentView === "reset") return;
   if (active) {
     await ensureAppLoaded();
@@ -445,6 +446,11 @@ async function refreshAccessState() {
       showOnly("app");
     }
   } else {
+    if (status === "canceled") {
+      paywallMessage.textContent = "Sua assinatura foi cancelada. Esperamos te ver de volta em breve!";
+    } else {
+      paywallMessage.textContent = "Sua conta ainda nao tem uma assinatura ativa.";
+    }
     subscribeBtn.disabled = false;
     subscribeBtn.textContent = "Assinar agora";
     showOnly("paywall");
