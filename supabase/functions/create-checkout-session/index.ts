@@ -21,8 +21,9 @@ const supabaseAdmin = createClient(
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
 );
 
+const allowedOrigin = Deno.env.get("SITE_URL") ?? "https://example.github.io/palco";
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": allowedOrigin,
   "Access-Control-Allow-Headers": "authorization, content-type",
 };
 
