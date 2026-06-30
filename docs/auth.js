@@ -10,7 +10,13 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_CONFIG.anonKey,
 );
 
+const loadingOverlay = document.getElementById("loading-overlay");
 const authOverlay = document.getElementById("auth-overlay");
+const confirmOverlay = document.getElementById("confirm-overlay");
+const confirmEmailDesc = document.getElementById("confirm-email-desc");
+const confirmError = document.getElementById("confirm-error");
+const btnResend = document.getElementById("btn-resend");
+const btnBackToLogin = document.getElementById("btn-back-to-login");
 const paywallOverlay = document.getElementById("paywall-overlay");
 const profileOverlay = document.getElementById("profile-overlay");
 const appRoot = document.getElementById("app");
@@ -43,6 +49,35 @@ const profilePasswordMessage = document.getElementById("profile-password-message
 const btnProfileBack = document.getElementById("btn-profile-back");
 const btnManageBilling = document.getElementById("btn-manage-billing");
 const profileBillingMessage = document.getElementById("profile-billing-message");
+
+function mensagemAmigavel(raw) {
+  const m = (raw || "").toLowerCase();
+  if (m.includes("invalid login credentials"))
+    return "Email ou senha incorretos.";
+  if (m.includes("email not confirmed"))
+    return "Confirme seu email antes de entrar. Verifique sua caixa de entrada.";
+  if (m.includes("user already registered"))
+    return "Este email já possui uma conta. Tente entrar ou recuperar a senha.";
+  if (m.includes("password should be at least"))
+    return "A senha precisa ter pelo menos 6 caracteres.";
+  if (m.includes("unable to validate email address") || m.includes("invalid format"))
+    return "O formato do email parece inválido. Verifique e tente novamente.";
+  if (m.includes("for security purposes") || m.includes("rate limit") || m.includes("429"))
+    return "Muitas tentativas. Aguarde alguns minutos e tente novamente.";
+  if (m.includes("auth session missing") || m.includes("session_not_found"))
+    return "Sua sessão expirou. Faça login novamente.";
+  if (m.includes("network") || m.includes("fetch") || m.includes("failed to fetch"))
+    return "Problema de conexão. Verifique sua internet e tente novamente.";
+  if (m.includes("timeout"))
+    return "O servidor demorou para responder. Tente novamente em instantes.";
+  if (m.includes("same password"))
+    return "A nova senha não pode ser igual à senha atual.";
+  if (m.includes("portal"))
+    return "Não foi possível abrir o portal de assinatura. Tente novamente.";
+  if (m.includes("checkout"))
+    return "Não foi possível iniciar o pagamento. Tente novamente.";
+  return "Algo deu errado. Tente novamente ou entre em contato com o suporte.";
+}
 
 let authMode = "login"; // "login" ou "signup"
 let lastKnownUserEmail = "";
@@ -101,13 +136,46 @@ async function ensureAppLoaded() {
 }
 
 function showOnly(view) {
+  loadingOverlay.classList.add("hidden");
   currentView = view;
   authOverlay.classList.toggle("hidden", view !== "auth");
+  confirmOverlay.classList.toggle("hidden", view !== "confirm");
   resetOverlay.classList.toggle("hidden", view !== "reset");
   paywallOverlay.classList.toggle("hidden", view !== "paywall");
   profileOverlay.classList.toggle("hidden", view !== "profile");
   appRoot.classList.toggle("hidden", view !== "app");
+  if (view === "auth") {
+    authSubmitBtn.disabled = false;
+    authSubmitBtn.textContent = authMode === "login" ? "Entrar" : "Criar conta";
+  }
 }
+
+btnResend.addEventListener("click", async () => {
+  confirmError.textContent = "";
+  btnResend.disabled = true;
+  btnResend.innerHTML = '<span class="spinner"></span>Enviando...';
+  const email = btnResend.dataset.email || "";
+  const { error } = await supabaseClient.auth.resend({ type: "signup", email });
+  btnResend.disabled = false;
+  btnResend.textContent = "Reenviar email";
+  if (error) {
+    confirmError.textContent = mensagemAmigavel(error.message);
+  } else {
+    confirmError.classList.add("form-success");
+    confirmError.textContent = "Email reenviado. Verifique sua caixa de entrada.";
+  }
+});
+
+btnBackToLogin.addEventListener("click", () => {
+  authMode = "login";
+  authModeLabel.textContent = "Entrar";
+  authSubmitBtn.textContent = "Entrar";
+  authToggleLink.textContent = "Nao tem conta? Criar uma";
+  authError.textContent = "";
+  authEmail.value = "";
+  authPassword.value = "";
+  showOnly("auth");
+});
 
 authToggleLink.addEventListener("click", (evt) => {
   evt.preventDefault();
@@ -127,17 +195,29 @@ authForm.addEventListener("submit", async (evt) => {
   const email = authEmail.value.trim();
   const password = authPassword.value;
 
+  const label = authMode === "login" ? "Entrando..." : "Criando conta...";
+  authSubmitBtn.disabled = true;
+  authSubmitBtn.innerHTML = `<span class="spinner"></span>${label}`;
+
   const { error } =
     authMode === "login"
       ? await supabaseClient.auth.signInWithPassword({ email, password })
       : await supabaseClient.auth.signUp({ email, password });
 
   if (error) {
-    authError.textContent = error.message;
+    authError.textContent = mensagemAmigavel(error.message);
+    authSubmitBtn.disabled = false;
+    authSubmitBtn.textContent = authMode === "login" ? "Entrar" : "Criar conta";
     return;
   }
   if (authMode === "signup") {
-    authError.textContent = "Conta criada. Verifique seu email para confirmar o login.";
+    const email = authEmail.value.trim();
+    confirmEmailDesc.textContent = `Enviamos um link de confirmação para ${email}. Clique no link para ativar sua conta e então volte aqui para entrar.`;
+    confirmError.textContent = "";
+    btnResend.dataset.email = email;
+    authSubmitBtn.disabled = false;
+    authSubmitBtn.textContent = "Criar conta";
+    showOnly("confirm");
     return;
   }
   await refreshAccessState();
@@ -155,7 +235,7 @@ authForgotPasswordLink.addEventListener("click", async (evt) => {
     redirectTo: window.location.origin + window.location.pathname,
   });
   if (error) {
-    authError.textContent = error.message;
+    authError.textContent = mensagemAmigavel(error.message);
     return;
   }
   authError.classList.add("form-success");
@@ -171,7 +251,7 @@ resetForm.addEventListener("submit", async (evt) => {
   }
   const { error } = await supabaseClient.auth.updateUser({ password: resetNewPassword.value });
   if (error) {
-    resetError.textContent = error.message;
+    resetError.textContent = mensagemAmigavel(error.message);
     return;
   }
   resetNewPassword.value = "";
@@ -233,7 +313,7 @@ profilePasswordForm.addEventListener("submit", async (evt) => {
   }
   const { error } = await supabaseClient.auth.updateUser({ password: profileNewPassword.value });
   if (error) {
-    profilePasswordMessage.textContent = error.message;
+    profilePasswordMessage.textContent = mensagemAmigavel(error.message);
     return;
   }
   profileNewPassword.value = "";
@@ -245,7 +325,7 @@ profilePasswordForm.addEventListener("submit", async (evt) => {
 btnManageBilling.addEventListener("click", async () => {
   profileBillingMessage.textContent = "";
   btnManageBilling.disabled = true;
-  btnManageBilling.textContent = "Abrindo...";
+  btnManageBilling.innerHTML = '<span class="spinner"></span>Abrindo...';
   try {
     const { data: sessionData } = await supabaseClient.auth.getSession();
     const accessToken = sessionData.session?.access_token;
@@ -257,10 +337,10 @@ btnManageBilling.addEventListener("click", async () => {
     if (body.url) {
       window.location.href = body.url;
     } else {
-      throw new Error(body.error || "Nao foi possivel abrir o portal de assinatura.");
+      throw new Error(body.error || "portal");
     }
   } catch (err) {
-    profileBillingMessage.textContent = String(err.message || err);
+    profileBillingMessage.textContent = mensagemAmigavel(String(err.message || err));
     btnManageBilling.disabled = false;
     btnManageBilling.textContent = "Gerenciar assinatura";
   }
@@ -269,7 +349,7 @@ btnManageBilling.addEventListener("click", async () => {
 subscribeBtn.addEventListener("click", async () => {
   paywallError.textContent = "";
   subscribeBtn.disabled = true;
-  subscribeBtn.textContent = "Redirecionando...";
+  subscribeBtn.innerHTML = '<span class="spinner"></span>Redirecionando...';
   try {
     const { data: sessionData } = await supabaseClient.auth.getSession();
     const accessToken = sessionData.session?.access_token;
@@ -281,10 +361,10 @@ subscribeBtn.addEventListener("click", async () => {
     if (body.url) {
       window.location.href = body.url;
     } else {
-      throw new Error(body.error || "Nao foi possivel iniciar o checkout.");
+      throw new Error(body.error || "checkout");
     }
   } catch (err) {
-    paywallError.textContent = String(err.message || err);
+    paywallError.textContent = mensagemAmigavel(String(err.message || err));
     subscribeBtn.disabled = false;
     subscribeBtn.textContent = "Assinar agora";
   }

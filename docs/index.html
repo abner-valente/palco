@@ -7,6 +7,11 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <span>Carregando...</span>
+  </div>
+
   <div id="auth-overlay" class="overlay hidden">
     <form id="auth-form" class="auth-card">
       <h1>Palco de Papeis</h1>
@@ -24,6 +29,18 @@
       <a href="#" id="auth-toggle-mode">Nao tem conta? Criar uma</a>
       <a href="#" id="auth-forgot-password">Esqueci minha senha</a>
     </form>
+  </div>
+
+  <div id="confirm-overlay" class="overlay hidden">
+    <div class="auth-card">
+      <h1>Palco de Papéis</h1>
+      <h2>Confirme seu email</h2>
+      <p id="confirm-email-desc" style="font-size:13px; color:#ccc; margin:0;"></p>
+      <p style="font-size:12px; color:#888; margin:0;">Não recebeu? Verifique a pasta de spam ou reenvie abaixo.</p>
+      <p id="confirm-error" class="form-error"></p>
+      <button type="button" id="btn-resend">Reenviar email</button>
+      <button type="button" id="btn-back-to-login" class="secondary">Voltar ao login</button>
+    </div>
   </div>
 
   <div id="reset-overlay" class="overlay hidden">
