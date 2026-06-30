@@ -47,6 +47,58 @@ const profileBillingMessage = document.getElementById("profile-billing-message")
 let authMode = "login"; // "login" ou "signup"
 let lastKnownUserEmail = "";
 let currentView = null;
+let appLoaded = false;
+
+const APP_BODY_HTML = `
+<aside id="palette">
+  <div class="palette-col" id="col-pieces"></div>
+  <div class="palette-col" id="col-bases"></div>
+</aside>
+<main id="stage-wrapper">
+  <div id="stage-bg-container">
+    <img id="stage-bg" src="assets/stage/palco.png" alt="Palco">
+  </div>
+  <svg id="connections-layer"></svg>
+  <div id="items-layer"></div>
+  <button id="trash" title="Arraste um item aqui para remover">
+    <svg viewBox="0 0 24 24" width="22" height="22">
+      <path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+  </button>
+  <div id="zoom-control">
+    <span id="zoom-label">Zoom palco: 100%</span>
+    <div class="zoom-row">
+      <button id="zoom-minus">-</button>
+      <input type="range" id="zoom-slider" min="50" max="250" value="100">
+      <button id="zoom-plus">+</button>
+    </div>
+  </div>
+  <div id="top-bar">
+    <button id="btn-save">Salvar (.json)</button>
+    <label id="btn-load" class="file-btn">
+      Carregar (.json)
+      <input type="file" id="load-input" accept="application/json">
+    </label>
+  </div>
+  <div id="help-bar">
+    Arraste da paleta | Scroll sobre peca/base: redimensionar | Botao direito em peca: conectar |
+    Clique numa linha: selecionar | Del / arraste p/ lixeira: remover | Duplo clique: rotular
+  </div>
+</main>
+`;
+
+async function ensureAppLoaded() {
+  if (appLoaded) return;
+  document.getElementById("app-body").innerHTML = APP_BODY_HTML;
+  await new Promise((resolve) => {
+    const s = document.createElement("script");
+    s.src = "app.js";
+    s.onload = resolve;
+    document.body.appendChild(s);
+  });
+  appLoaded = true;
+}
 
 function showOnly(view) {
   currentView = view;
@@ -261,6 +313,7 @@ async function refreshAccessState() {
   const active = await hasActiveSubscription(session.user.id);
   if (currentView === "reset") return;
   if (active) {
+    await ensureAppLoaded();
     lastKnownUserEmail = session.user.email;
     userEmailLabel.textContent = session.user.email;
     closeUserMenu();

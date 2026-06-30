@@ -72,7 +72,7 @@ Deno.serve(async (req) => {
       customer: customerId,
       line_items: [{ price: Deno.env.get("STRIPE_PRICE_ID") ?? "", quantity: 1 }],
       success_url: `${siteUrl}/index.html?checkout=sucesso`,
-      cancel_url: `${siteUrl}/assinatura.html?checkout=cancelado`,
+      cancel_url: `${siteUrl}/index.html?checkout=cancelado`,
       metadata: { supabase_user_id: user.id },
     });
 
