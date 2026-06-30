@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
     const siteUrl = Deno.env.get("SITE_URL") ?? "https://example.github.io/palco";
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: subscription.stripe_customer_id,
-      return_url: `${siteUrl}/index.html`,
+      return_url: `${siteUrl}/index.html?portal=return`,
     });
 
     return new Response(JSON.stringify({ url: portalSession.url }), {

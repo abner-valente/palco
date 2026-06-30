@@ -461,3 +461,9 @@ supabaseClient.auth.onAuthStateChange((event) => {
 });
 
 refreshAccessState();
+
+// Quando o usuário retorna do portal Stripe, o webhook pode ainda não ter chegado.
+// Re-verifica após 3s para garantir que o status foi atualizado.
+if (new URLSearchParams(window.location.search).get("portal") === "return") {
+  setTimeout(refreshAccessState, 3000);
+}

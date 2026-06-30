@@ -73,11 +73,14 @@ async function upsertSubscriptionFromStripe(subscriptionId: string, customerId: 
   const userId = (customer as Stripe.Customer).metadata?.supabase_user_id;
   if (!userId) return null;
 
+  // Se o usuario agendou cancelamento, trata como cancelado imediatamente
+  const statusEfetivo = subscription.cancel_at_period_end ? "canceled" : subscription.status;
+
   const { error } = await supabaseAdmin.from("subscriptions").upsert({
     user_id: userId,
     stripe_customer_id: customerId,
     stripe_subscription_id: subscription.id,
-    status: subscription.status, // active | past_due | canceled | trialing | ...
+    status: statusEfetivo,
     current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
     updated_at: new Date().toISOString(),
   });
