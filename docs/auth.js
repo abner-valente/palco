@@ -286,7 +286,50 @@ document.addEventListener("click", (evt) => {
   }
 });
 
-menuProfileBtn.addEventListener("click", () => {
+const subStatus  = document.getElementById("sub-status");
+const subRenewal = document.getElementById("sub-renewal");
+
+async function carregarInfoAssinatura() {
+  subStatus.textContent = "Carregando...";
+  subStatus.className = "sub-value";
+  subRenewal.textContent = "—";
+
+  const { data: sessionData } = await supabaseClient.auth.getSession();
+  const userId = sessionData.session?.user?.id;
+  if (!userId) return;
+
+  const { data } = await supabaseClient
+    .from("subscriptions")
+    .select("status, current_period_end")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (!data) {
+    subStatus.textContent = "Sem assinatura";
+    subStatus.className = "sub-value status-inactive";
+    return;
+  }
+
+  const statusMap = {
+    active:    { texto: "Ativa",       classe: "status-active"   },
+    past_due:  { texto: "Vencida",     classe: "status-past-due" },
+    canceled:  { texto: "Cancelada",   classe: "status-inactive" },
+    inactive:  { texto: "Inativa",     classe: "status-inactive" },
+  };
+  const info = statusMap[data.status] ?? { texto: data.status, classe: "" };
+  subStatus.textContent = info.texto;
+  subStatus.className = `sub-value ${info.classe}`;
+
+  if (data.current_period_end) {
+    subRenewal.textContent = new Date(data.current_period_end).toLocaleDateString("pt-BR", {
+      day: "2-digit", month: "long", year: "numeric",
+    });
+  } else {
+    subRenewal.textContent = "—";
+  }
+}
+
+menuProfileBtn.addEventListener("click", async () => {
   closeUserMenu();
   profileEmail.value = lastKnownUserEmail;
   profileNewPassword.value = "";
@@ -295,8 +338,9 @@ menuProfileBtn.addEventListener("click", () => {
   profilePasswordMessage.textContent = "";
   profileBillingMessage.textContent = "";
   btnManageBilling.disabled = false;
-  btnManageBilling.textContent = "Gerenciar assinatura";
+  btnManageBilling.textContent = "Gerenciar assinatura no Stripe";
   showOnly("profile");
+  await carregarInfoAssinatura();
 });
 
 btnProfileBack.addEventListener("click", () => {

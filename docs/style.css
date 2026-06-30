@@ -238,6 +238,37 @@ html, body {
   gap: 10px;
 }
 
+/* ── Resumo de assinatura ── */
+#subscription-info {
+  background: #1e1a24;
+  border: 1px solid #2e2a38;
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sub-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.sub-label {
+  color: #888;
+}
+
+.sub-value {
+  font-weight: 600;
+  color: #ddd;
+}
+
+.sub-value.status-active   { color: #7ad19a; }
+.sub-value.status-inactive { color: #e87a7a; }
+.sub-value.status-past-due { color: #f0a050; }
+
 .auth-card input:disabled {
   opacity: 0.6;
   cursor: not-allowed;

@@ -67,11 +67,11 @@ async function enviarEmailBoasVindas(email: string, periodoFim: Date) {
   });
 }
 
-async function upsertSubscriptionFromStripe(subscriptionId: string, customerId: string) {
+async function upsertSubscriptionFromStripe(subscriptionId: string, customerId: string): Promise<string | null> {
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
   const customer = await stripe.customers.retrieve(customerId);
   const userId = (customer as Stripe.Customer).metadata?.supabase_user_id;
-  if (!userId) return;
+  if (!userId) return null;
 
   const { error } = await supabaseAdmin.from("subscriptions").upsert({
     user_id: userId,
@@ -83,6 +83,15 @@ async function upsertSubscriptionFromStripe(subscriptionId: string, customerId: 
   });
   if (error) {
     console.error("Falha ao gravar subscriptions:", error);
+    throw error;
+  }
+  return userId;
+}
+
+async function deletarUsuario(userId: string) {
+  const { error } = await supabaseAdmin.auth.admin.deleteUser(userId);
+  if (error) {
+    console.error("Falha ao deletar usuario:", error);
     throw error;
   }
 }
@@ -117,10 +126,17 @@ Deno.serve(async (req) => {
       }
       break;
     }
-    case "customer.subscription.updated":
-    case "customer.subscription.deleted": {
+    case "customer.subscription.updated": {
       const subscription = event.data.object as Stripe.Subscription;
       await upsertSubscriptionFromStripe(subscription.id, subscription.customer as string);
+      break;
+    }
+    case "customer.subscription.deleted": {
+      const subscription = event.data.object as Stripe.Subscription;
+      const userId = await upsertSubscriptionFromStripe(subscription.id, subscription.customer as string);
+      if (userId) {
+        await deletarUsuario(userId);
+      }
       break;
     }
     default:
