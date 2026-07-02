@@ -42,6 +42,8 @@ const userMenuBtn = document.getElementById("user-menu-btn");
 const userMenuDropdown = document.getElementById("user-menu-dropdown");
 const menuLogoutBtn = document.getElementById("menu-logout");
 const menuProfileBtn = document.getElementById("menu-profile");
+const menuSupportBtn = document.getElementById("menu-support");
+const paywallSupportBtn = document.getElementById("paywall-support");
 const profileEmail = document.getElementById("profile-email");
 const profilePasswordForm = document.getElementById("profile-password-form");
 const profileNewPassword = document.getElementById("profile-new-password");
@@ -465,6 +467,21 @@ supabaseClient.auth.onAuthStateChange((event) => {
   }
   refreshAccessState();
 });
+
+async function copiarEmailSuporte(btn) {
+  const email = btn.dataset.supportEmail;
+  const textoOriginal = btn.textContent;
+  try {
+    await navigator.clipboard.writeText(email);
+    btn.textContent = "Email copiado!";
+  } catch {
+    btn.textContent = email;
+  }
+  setTimeout(() => { btn.textContent = textoOriginal; }, 2000);
+}
+
+menuSupportBtn?.addEventListener("click", () => copiarEmailSuporte(menuSupportBtn));
+paywallSupportBtn?.addEventListener("click", () => copiarEmailSuporte(paywallSupportBtn));
 
 refreshAccessState();
 

@@ -141,10 +141,13 @@ html, body {
 }
 
 .support-link {
+  background: transparent;
+  border: none;
   color: #8fb6f0;
   font-size: 12px;
   text-decoration: none;
   margin-top: 4px;
+  cursor: pointer;
 }
 
 .support-link:hover {
