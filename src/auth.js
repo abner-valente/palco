@@ -42,6 +42,9 @@ const menuLogoutBtn = document.getElementById("menu-logout")
 const menuProfileBtn = document.getElementById("menu-profile")
 const menuSupportBtn = document.getElementById("menu-support")
 const paywallSupportBtn = document.getElementById("paywall-support")
+const blockedOverlay = document.getElementById("blocked-overlay")
+const btnLogoutBlocked = document.getElementById("btn-logout-blocked")
+const blockedSupportBtn = document.getElementById("blocked-support")
 const profileEmail = document.getElementById("profile-email")
 const profilePasswordForm = document.getElementById("profile-password-form")
 const profileNewPassword = document.getElementById("profile-new-password")
@@ -138,6 +141,7 @@ function showOnly(view) {
   confirmOverlay.classList.toggle("hidden", view !== "confirm")
   resetOverlay.classList.toggle("hidden", view !== "reset")
   paywallOverlay.classList.toggle("hidden", view !== "paywall")
+  blockedOverlay.classList.toggle("hidden", view !== "blocked")
   profileOverlay.classList.toggle("hidden", view !== "profile")
   appRoot.classList.toggle("hidden", view !== "app")
   if (view === "auth") {
@@ -409,6 +413,15 @@ subscribeBtn.addEventListener("click", async () => {
   }
 })
 
+async function isUserBlocked(userId) {
+  const { data } = await supabaseClient
+    .from("profiles")
+    .select("blocked")
+    .eq("user_id", userId)
+    .maybeSingle()
+  return data?.blocked === true
+}
+
 async function getSubscriptionInfo(userId) {
   const { data } = await supabaseClient
     .from("subscriptions")
@@ -427,6 +440,12 @@ async function refreshAccessState() {
   const session = data.session
   if (!session) {
     showOnly("auth")
+    return
+  }
+  const blocked = await isUserBlocked(session.user.id)
+  if (currentView === "reset") return
+  if (blocked) {
+    showOnly("blocked")
     return
   }
   const { active, status } = await getSubscriptionInfo(session.user.id)
@@ -474,6 +493,11 @@ async function copiarEmailSuporte(btn) {
 
 menuSupportBtn?.addEventListener("click", () => copiarEmailSuporte(menuSupportBtn))
 paywallSupportBtn?.addEventListener("click", () => copiarEmailSuporte(paywallSupportBtn))
+blockedSupportBtn?.addEventListener("click", () => copiarEmailSuporte(blockedSupportBtn))
+btnLogoutBlocked?.addEventListener("click", async () => {
+  await supabaseClient.auth.signOut()
+  await refreshAccessState()
+})
 
 refreshAccessState()
 
