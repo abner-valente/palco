@@ -413,6 +413,14 @@ subscribeBtn.addEventListener("click", async () => {
   }
 })
 
+async function registrarSessao(userId, email) {
+  await supabaseClient.from("sessions").insert({
+    user_id:    userId,
+    email:      email,
+    user_agent: navigator.userAgent,
+  })
+}
+
 async function isUserBlocked(userId) {
   const { data } = await supabaseClient
     .from("profiles")
@@ -470,11 +478,14 @@ async function refreshAccessState() {
   }
 }
 
-supabaseClient.auth.onAuthStateChange((event) => {
+supabaseClient.auth.onAuthStateChange((event, session) => {
   if (event === "PASSWORD_RECOVERY") {
     resetError.textContent = ""
     showOnly("reset")
     return
+  }
+  if (event === "SIGNED_IN" && session) {
+    registrarSessao(session.user.id, session.user.email)
   }
   refreshAccessState()
 })
