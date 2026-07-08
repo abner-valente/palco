@@ -483,6 +483,35 @@ export function initApp() {
 
   buildPalette()
   applyZoom(100)
+  loadDefaultLayout()
+}
+
+function loadDefaultLayout() {
+  const w = stageWrapper.clientWidth
+  const h = stageWrapper.clientHeight
+  const cx = w / 2
+  const cy = h / 2
+
+  // Peças dispostas em arco ao redor do palco
+  const defaults = [
+    { shape: 'cubo',     size: 'G', dx: -0.32, dy: -0.28 },
+    { shape: 'cubo',     size: 'M', dx: -0.22, dy: -0.38 },
+    { shape: 'cubo',     size: 'G', dx: -0.10, dy: -0.42 },
+    { shape: 'cubo',     size: 'M', dx:  0.04, dy: -0.40 },
+    { shape: 'cubo',     size: 'G', dx:  0.16, dy: -0.36 },
+    { shape: 'cubo',     size: 'P', dx:  0.26, dy: -0.30 },
+    { shape: 'cilindro', size: 'G', dx:  0.34, dy: -0.20 },
+    { shape: 'cilindro', size: 'M', dx:  0.36, dy: -0.06 },
+    { shape: 'cilindro', size: 'P', dx:  0.30, dy:  0.08 },
+    { shape: 'cilindro', size: 'G', dx: -0.36, dy: -0.14 },
+    { shape: 'cilindro', size: 'M', dx: -0.34, dy:  0.02 },
+    { shape: 'prisma',   size: 'M', dx: -0.18, dy: -0.46 },
+    { shape: 'prisma',   size: 'G', dx:  0.10, dy: -0.46 },
+  ]
+
+  for (const p of defaults) {
+    createPiece(p.shape, p.size, cx + p.dx * w, cy + p.dy * h)
+  }
 }
 
 function findPieceAt(point) {
