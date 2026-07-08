@@ -4,3 +4,6 @@ __pycache__/
 sessao.json
 supabase/.temp/
 *.pdf
+node_modules/
+dist/
+.env

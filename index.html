@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Palco de Papeis - web</title>
+</head>
+<body>
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <span>Carregando...</span>
+  </div>
+
+  <div id="auth-overlay" class="overlay hidden">
+    <form id="auth-form" class="auth-card">
+      <h1>Palco de Papeis</h1>
+      <h2 id="auth-mode-label">Entrar</h2>
+      <label>
+        Email
+        <input type="email" id="auth-email" required autocomplete="email">
+      </label>
+      <label>
+        Senha
+        <input type="password" id="auth-password" required autocomplete="current-password" minlength="6">
+      </label>
+      <p id="auth-error" class="form-error"></p>
+      <button type="submit" id="auth-submit">Entrar</button>
+      <a href="#" id="auth-toggle-mode">Nao tem conta? Criar uma</a>
+      <a href="#" id="auth-forgot-password">Esqueci minha senha</a>
+    </form>
+  </div>
+
+  <div id="confirm-overlay" class="overlay hidden">
+    <div class="auth-card">
+      <h1>Palco de Papéis</h1>
+      <h2>Confirme seu email</h2>
+      <p id="confirm-email-desc" style="font-size:13px; color:#ccc; margin:0;"></p>
+      <p style="font-size:12px; color:#888; margin:0;">Não recebeu? Verifique a pasta de spam ou reenvie abaixo.</p>
+      <p id="confirm-error" class="form-error"></p>
+      <button type="button" id="btn-resend">Reenviar email</button>
+      <button type="button" id="btn-back-to-login" class="secondary">Voltar ao login</button>
+    </div>
+  </div>
+
+  <div id="reset-overlay" class="overlay hidden">
+    <form id="reset-form" class="auth-card">
+      <h1>Redefinir senha</h1>
+      <label>
+        Nova senha
+        <input type="password" id="reset-new-password" required minlength="6" autocomplete="new-password">
+      </label>
+      <label>
+        Confirmar nova senha
+        <input type="password" id="reset-confirm-password" required minlength="6" autocomplete="new-password">
+      </label>
+      <p id="reset-error" class="form-error"></p>
+      <button type="submit" id="reset-submit">Salvar nova senha</button>
+    </form>
+  </div>
+
+  <div id="paywall-overlay" class="overlay hidden">
+    <div class="auth-card">
+      <h1>Palco de Papeis</h1>
+      <p id="paywall-message">Sua conta ainda nao tem uma assinatura ativa.</p>
+      <p id="paywall-error" class="form-error"></p>
+      <button type="button" id="btn-subscribe">Assinar agora</button>
+      <button type="button" id="btn-logout" class="secondary">Sair</button>
+      <button type="button" id="paywall-support" class="support-link" data-support-email="thedatabra@gmail.com">Precisa de ajuda? Entre em contato</button>
+    </div>
+  </div>
+
+  <div id="profile-overlay" class="overlay hidden">
+    <div class="auth-card">
+      <h1>Meu perfil</h1>
+      <label>
+        Email
+        <input type="email" id="profile-email" disabled>
+      </label>
+      <h2>Trocar senha</h2>
+      <form id="profile-password-form">
+        <label>
+          Nova senha
+          <input type="password" id="profile-new-password" required minlength="6" autocomplete="new-password">
+        </label>
+        <label>
+          Confirmar nova senha
+          <input type="password" id="profile-confirm-password" required minlength="6" autocomplete="new-password">
+        </label>
+        <p id="profile-password-message" class="form-error"></p>
+        <button type="submit">Atualizar senha</button>
+      </form>
+      <h2>Assinatura</h2>
+      <div id="subscription-info">
+        <div class="sub-row">
+          <span class="sub-label">Status</span>
+          <span id="sub-status" class="sub-value">—</span>
+        </div>
+        <div class="sub-row">
+          <span class="sub-label">Próxima renovação</span>
+          <span id="sub-renewal" class="sub-value">—</span>
+        </div>
+      </div>
+      <p id="profile-billing-message" class="form-error"></p>
+      <button type="button" id="btn-manage-billing">Gerenciar assinatura no Stripe</button>
+      <button type="button" id="btn-profile-back" class="secondary">Voltar ao palco</button>
+    </div>
+  </div>
+
+  <div id="app" class="hidden">
+    <header id="app-header">
+      <span id="app-title">Palco de Papeis</span>
+      <div id="user-menu">
+        <button type="button" id="user-menu-btn" aria-haspopup="true" aria-expanded="false">
+          <span id="user-email">...</span>
+          <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div id="user-menu-dropdown" class="hidden">
+          <button type="button" id="menu-profile">Meu perfil</button>
+          <button type="button" id="menu-support" data-support-email="thedatabra@gmail.com">Suporte</button>
+          <button type="button" id="menu-logout">Sair</button>
+        </div>
+      </div>
+    </header>
+
+    <div id="app-body"></div>
+  </div>
+
+  <div id="label-editor" class="hidden">
+    <input type="text" id="label-input" maxlength="18">
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
