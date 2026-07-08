@@ -418,6 +418,9 @@ html, body {
   cursor: grab;
 }
 
+.base  { z-index: 1; }
+.piece { z-index: 2; }
+
 .piece img, .base img {
   width: 100%;
   height: 100%;
