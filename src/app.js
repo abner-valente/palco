@@ -483,7 +483,7 @@ export function initApp() {
 
   buildPalette()
   applyZoom(100)
-  loadDefaultLayout()
+  requestAnimationFrame(() => requestAnimationFrame(loadDefaultLayout))
 }
 
 function loadDefaultLayout() {
