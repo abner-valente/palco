@@ -132,6 +132,8 @@ async function ensureAppLoaded() {
   document.getElementById("app-body").innerHTML = APP_BODY_HTML
   initApp()
   appLoaded = true
+  window.__track?.("sessao_inicio")
+  window.addEventListener("beforeunload", () => window.__track?.("sessao_fim"))
 }
 
 function showOnly(view) {
@@ -421,6 +423,12 @@ async function registrarSessao(userId, email) {
   })
 }
 
+function configurarTracking(userId) {
+  window.__track = (evento, dados = {}) => {
+    supabaseClient.from("usage_events").insert({ user_id: userId, evento, dados })
+  }
+}
+
 async function isUserBlocked(userId) {
   const { data } = await supabaseClient
     .from("profiles")
@@ -459,6 +467,7 @@ async function refreshAccessState() {
   const { active, status } = await getSubscriptionInfo(session.user.id)
   if (currentView === "reset") return
   if (active) {
+    configurarTracking(session.user.id)
     await ensureAppLoaded()
     lastKnownUserEmail = session.user.email
     userEmailLabel.textContent = session.user.email

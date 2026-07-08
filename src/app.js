@@ -156,6 +156,7 @@ function createPiece(shape, size, x, y, options = {}) {
   attachPieceHandlers(el, id)
   pieces.set(id, piece)
   updatePieceVisual(piece)
+  if (!options.id) window.__track?.("peca_criada", { shape, size })
   return piece
 }
 
@@ -173,6 +174,7 @@ function updatePieceVisual(piece) {
 function removePiece(id) {
   const piece = pieces.get(id)
   if (!piece) return
+  window.__track?.("peca_removida", { shape: piece.shape, size: piece.size })
   piece.el.remove()
   pieces.delete(id)
   for (const [connId, conn] of [...connections.entries()]) {
@@ -316,6 +318,7 @@ function createConnection(aId, bId, options = {}) {
   const conn = { id, aId, bId, el: line }
   connections.set(id, conn)
   refreshConnectionLine(conn)
+  if (!options.id) window.__track?.("conexao_feita")
   return conn
 }
 
@@ -467,6 +470,7 @@ export function initApp() {
     a.href = url; a.download = "sessao.json"
     document.body.appendChild(a); a.click(); a.remove()
     URL.revokeObjectURL(url)
+    window.__track?.("salvo", { pecas: pieces.size, conexoes: connections.size })
   })
 
   document.getElementById("load-input").addEventListener("change", (evt) => {
@@ -474,7 +478,10 @@ export function initApp() {
     if (!file) return
     const reader = new FileReader()
     reader.onload = () => {
-      try { loadSessionData(JSON.parse(reader.result)) }
+      try {
+        loadSessionData(JSON.parse(reader.result))
+        window.__track?.("carregado")
+      }
       catch { alert("Arquivo de sessao invalido.") }
     }
     reader.readAsText(file)
