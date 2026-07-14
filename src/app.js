@@ -1,4 +1,4 @@
-const SIZE_PX = { P: 28, M: 40, G: 56 }
+const SIZE_PX = { P: 14, M: 20, G: 28 }
 const MIN_RADIUS = 14
 const MAX_RADIUS = 100
 const RESIZE_STEP = 3
@@ -489,7 +489,7 @@ export function initApp() {
   })
 
   buildPalette()
-  applyZoom(76)
+  applyZoom(96)
   requestAnimationFrame(() => requestAnimationFrame(loadDefaultLayout))
 }
 
@@ -507,26 +507,26 @@ function loadDefaultLayout() {
     // dy = offset_arco + dyBase  (offset = -0.06)
 
     // --- Lado esquerdo ---
-    { shape: 'prisma',   size: 'P', dx: -0.05, dy: -0.25 },
-    { shape: 'prisma',   size: 'M', dx: -0.13, dy: -0.22 },
-    { shape: 'prisma',   size: 'G', dx: -0.20, dy: -0.17 },
-    { shape: 'cubo',     size: 'P', dx: -0.24, dy: -0.11 },
-    { shape: 'cubo',     size: 'M', dx: -0.26, dy: -0.04 },
-    { shape: 'cubo',     size: 'G', dx: -0.24, dy:  0.03 },
-    { shape: 'cilindro', size: 'P', dx: -0.20, dy:  0.09 },
-    { shape: 'cilindro', size: 'M', dx: -0.13, dy:  0.14 },
-    { shape: 'cilindro', size: 'G', dx: -0.05, dy:  0.17 },
+    { shape: 'prisma',   size: 'P', dx: -0.05, dy: -0.30 },
+    { shape: 'prisma',   size: 'M', dx: -0.13, dy: -0.26 },
+    { shape: 'prisma',   size: 'G', dx: -0.20, dy: -0.20 },
+    { shape: 'cubo',     size: 'P', dx: -0.24, dy: -0.13 },
+    { shape: 'cubo',     size: 'M', dx: -0.26, dy: -0.05 },
+    { shape: 'cubo',     size: 'G', dx: -0.24, dy:  0.04 },
+    { shape: 'cilindro', size: 'P', dx: -0.20, dy:  0.11 },
+    { shape: 'cilindro', size: 'M', dx: -0.13, dy:  0.17 },
+    { shape: 'cilindro', size: 'G', dx: -0.05, dy:  0.20 },
 
     // --- Lado direito (espelho) ---
-    { shape: 'prisma',   size: 'P', dx:  0.05, dy: -0.25 },
-    { shape: 'prisma',   size: 'M', dx:  0.13, dy: -0.22 },
-    { shape: 'prisma',   size: 'G', dx:  0.20, dy: -0.17 },
-    { shape: 'cubo',     size: 'P', dx:  0.24, dy: -0.11 },
-    { shape: 'cubo',     size: 'M', dx:  0.26, dy: -0.04 },
-    { shape: 'cubo',     size: 'G', dx:  0.24, dy:  0.03 },
-    { shape: 'cilindro', size: 'P', dx:  0.20, dy:  0.09 },
-    { shape: 'cilindro', size: 'M', dx:  0.13, dy:  0.14 },
-    { shape: 'cilindro', size: 'G', dx:  0.05, dy:  0.17 },
+    { shape: 'prisma',   size: 'P', dx:  0.05, dy: -0.30 },
+    { shape: 'prisma',   size: 'M', dx:  0.13, dy: -0.26 },
+    { shape: 'prisma',   size: 'G', dx:  0.20, dy: -0.20 },
+    { shape: 'cubo',     size: 'P', dx:  0.24, dy: -0.13 },
+    { shape: 'cubo',     size: 'M', dx:  0.26, dy: -0.05 },
+    { shape: 'cubo',     size: 'G', dx:  0.24, dy:  0.04 },
+    { shape: 'cilindro', size: 'P', dx:  0.20, dy:  0.11 },
+    { shape: 'cilindro', size: 'M', dx:  0.13, dy:  0.17 },
+    { shape: 'cilindro', size: 'G', dx:  0.05, dy:  0.20 },
   ]
 
   for (const p of defaults) {

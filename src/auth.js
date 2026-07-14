@@ -109,7 +109,7 @@ const APP_BODY_HTML = `
     <span id="zoom-label">Zoom palco: 100%</span>
     <div class="zoom-row">
       <button id="zoom-minus">-</button>
-      <input type="range" id="zoom-slider" min="50" max="250" value="76">
+      <input type="range" id="zoom-slider" min="50" max="250" value="96">
       <button id="zoom-plus">+</button>
     </div>
   </div>
