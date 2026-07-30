@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: '/palco/',
+  base: '/',
   build: {
     outDir: 'dist',
   },
