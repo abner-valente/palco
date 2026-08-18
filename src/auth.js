@@ -35,12 +35,10 @@ const logoutBtn = document.getElementById("btn-logout")
 const subscribeBtn = document.getElementById("btn-subscribe")
 const paywallError = document.getElementById("paywall-error")
 const paywallMessage = document.getElementById("paywall-message")
-const userEmailLabel = document.getElementById("user-email")
-const userMenuBtn = document.getElementById("user-menu-btn")
-const userMenuDropdown = document.getElementById("user-menu-dropdown")
-const menuLogoutBtn = document.getElementById("menu-logout")
-const menuProfileBtn = document.getElementById("menu-profile")
-const menuSupportBtn = document.getElementById("menu-support")
+let userEmailLabel = null
+let menuLogoutBtn = null
+let menuProfileBtn = null
+let menuSupportBtn = null
 const paywallSupportBtn = document.getElementById("paywall-support")
 const blockedOverlay = document.getElementById("blocked-overlay")
 const btnLogoutBlocked = document.getElementById("btn-logout-blocked")
@@ -89,47 +87,135 @@ let currentView = null
 let appLoaded = false
 
 const APP_BODY_HTML = `
-<aside id="palette">
-  <div class="palette-col" id="col-pieces"></div>
-  <div class="palette-col" id="col-bases"></div>
-</aside>
-<main id="stage-wrapper">
-  <div id="stage-bg-container">
-    <img id="stage-bg" src="assets/stage/palco.png" alt="Palco">
-  </div>
-  <svg id="connections-layer"></svg>
-  <div id="items-layer"></div>
-  <button id="trash" title="Arraste um item aqui para remover">
-    <svg viewBox="0 0 24 24" width="22" height="22">
-      <path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-    </svg>
+<header id="app-header">
+  <img id="app-logo" src="/assets/design/logo-palco.png" alt="Palco de Papéis">
+  <button id="menu-toggle" aria-label="Abrir menu">
+    <img id="menu-icon-img" src="/assets/design/menu-open.png" alt="Menu">
   </button>
-  <div id="zoom-control">
-    <span id="zoom-label">Zoom palco: 100%</span>
-    <div class="zoom-row">
-      <button id="zoom-minus">-</button>
-      <input type="range" id="zoom-slider" min="50" max="250" value="96">
-      <button id="zoom-plus">+</button>
+</header>
+
+<div id="side-menu-overlay" class="hidden"></div>
+<nav id="side-menu" class="hidden">
+  <div id="side-menu-header">
+    <span id="user-email">...</span>
+    <button id="menu-close-btn" aria-label="Fechar menu">
+      <img id="menu-close-img" src="/assets/design/menu-close.png" alt="Fechar">
+    </button>
+  </div>
+  <button id="menu-profile" class="side-menu-btn">Meu perfil</button>
+  <button id="btn-save" class="side-menu-btn">Salvar (.json)</button>
+  <label class="file-btn-menu">
+    Carregar (.json)
+    <input type="file" id="load-input" accept="application/json">
+  </label>
+  <button id="menu-support" class="side-menu-btn" data-support-email="thedatabra@gmail.com">Suporte</button>
+  <button id="menu-logout" class="side-menu-btn">Sair</button>
+</nav>
+
+<section id="stage-section">
+  <div id="stage-wrapper">
+    <img id="stage-bg" src="/assets/design/cenario-palco.png" alt="Palco">
+    <svg id="connections-layer"></svg>
+    <div id="items-layer"></div>
+    <button id="trash" title="Arraste um item aqui para remover">
+      <svg viewBox="0 0 24 24" width="20" height="20">
+        <path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div id="zoom-control">
+      <span id="zoom-label">Zoom: 100%</span>
+      <div class="zoom-row">
+        <button id="zoom-minus">-</button>
+        <input type="range" id="zoom-slider" min="50" max="250" value="96">
+        <button id="zoom-plus">+</button>
+      </div>
     </div>
+    <div id="top-bar"></div>
+    <div id="help-bar">Arraste da paleta | Scroll: redimensionar | Botão direito: conectar | Del/lixeira: remover | Duplo clique: rotular</div>
   </div>
-  <div id="top-bar">
-    <button id="btn-save">Salvar (.json)</button>
-    <label id="btn-load" class="file-btn">
-      Carregar (.json)
-      <input type="file" id="load-input" accept="application/json">
-    </label>
+</section>
+
+<section id="palette-section">
+  <aside id="palette">
+    <div class="palette-col" id="col-pieces"></div>
+    <div class="palette-col" id="col-bases"></div>
+  </aside>
+  <div id="palette-badges">
+    <img src="/assets/design/selo-empatia.png" alt="Empatia">
+    <img src="/assets/design/selo-fortalecimento.png" alt="Fortalecimento Social">
   </div>
-  <div id="help-bar">
-    Arraste da paleta | Scroll sobre peca/base: redimensionar | Botao direito em peca: conectar |
-    Clique numa linha: selecionar | Del / arraste p/ lixeira: remover | Duplo clique: rotular
+</section>
+
+<footer id="app-footer">
+  <div class="footer-logos">
+    <img src="/assets/design/logo-palco.png" alt="Palco de Papéis">
+    <img src="/assets/design/logo-analucia.png" alt="Ana L. Tavares">
   </div>
-</main>
+  <div class="footer-contacts">
+    <p class="footer-contacts-title">CONTATOS</p>
+    <span>INSTAGRAM</span>
+    <span>FACEBOOK</span>
+    <span>WHATSAPP</span>
+  </div>
+  <p class="footer-email">contato@analuciatavares.com.br</p>
+  <button id="footer-support" class="footer-support-btn" data-support-email="thedatabra@gmail.com">SUPORTE</button>
+</footer>
 `
 
 async function ensureAppLoaded() {
   if (appLoaded) return
   document.getElementById("app-body").innerHTML = APP_BODY_HTML
+
+  // Resolve refs dinâmicas após injeção do HTML
+  userEmailLabel = document.getElementById("user-email")
+  menuLogoutBtn  = document.getElementById("menu-logout")
+  menuProfileBtn = document.getElementById("menu-profile")
+  menuSupportBtn = document.getElementById("menu-support")
+
+  // Hamburguer menu
+  const menuToggle    = document.getElementById("menu-toggle")
+  const sideMenu      = document.getElementById("side-menu")
+  const sideOverlay   = document.getElementById("side-menu-overlay")
+  const menuCloseBtn  = document.getElementById("menu-close-btn")
+  const menuIconImg   = document.getElementById("menu-icon-img")
+
+  function openMenu() {
+    sideMenu.classList.remove("hidden")
+    sideOverlay.classList.remove("hidden")
+    if (menuIconImg) menuIconImg.src = "/assets/design/menu-close.png"
+  }
+  function closeMenu() {
+    sideMenu.classList.add("hidden")
+    sideOverlay.classList.add("hidden")
+    if (menuIconImg) menuIconImg.src = "/assets/design/menu-open.png"
+  }
+
+  menuToggle?.addEventListener("click", () => {
+    sideMenu.classList.contains("hidden") ? openMenu() : closeMenu()
+  })
+  menuCloseBtn?.addEventListener("click", closeMenu)
+  sideOverlay?.addEventListener("click", closeMenu)
+
+  // Footer suporte
+  const footerSupport = document.getElementById("footer-support")
+  footerSupport?.addEventListener("click", () => copiarEmailSuporte(footerSupport))
+
+  // Logout e perfil via side menu
+  menuLogoutBtn?.addEventListener("click", () => { closeMenu(); handleLogout() })
+  menuProfileBtn?.addEventListener("click", async () => {
+    closeMenu()
+    if (profileEmail) profileEmail.value = lastKnownUserEmail
+    if (profileNewPassword) profileNewPassword.value = ""
+    if (profileConfirmPassword) profileConfirmPassword.value = ""
+    if (profilePasswordMessage) { profilePasswordMessage.classList.remove("form-success"); profilePasswordMessage.textContent = "" }
+    if (profileBillingMessage) profileBillingMessage.textContent = ""
+    if (btnManageBilling) { btnManageBilling.disabled = false; btnManageBilling.textContent = "Gerenciar assinatura no Stripe" }
+    showOnly("profile")
+    await carregarInfoAssinatura()
+  })
+  menuSupportBtn?.addEventListener("click", () => copiarEmailSuporte(menuSupportBtn))
+
   initApp()
   appLoaded = true
   window.__track?.("sessao_inicio")
@@ -262,30 +348,10 @@ resetForm.addEventListener("submit", async (evt) => {
 })
 
 async function handleLogout() {
-  closeUserMenu()
   await supabaseClient.auth.signOut()
   await refreshAccessState()
 }
 logoutBtn.addEventListener("click", handleLogout)
-menuLogoutBtn.addEventListener("click", handleLogout)
-
-function closeUserMenu() {
-  userMenuDropdown.classList.add("hidden")
-  userMenuBtn.setAttribute("aria-expanded", "false")
-}
-
-userMenuBtn.addEventListener("click", (evt) => {
-  evt.stopPropagation()
-  const isOpen = !userMenuDropdown.classList.contains("hidden")
-  userMenuDropdown.classList.toggle("hidden", isOpen)
-  userMenuBtn.setAttribute("aria-expanded", String(!isOpen))
-})
-
-document.addEventListener("click", (evt) => {
-  if (!document.getElementById("user-menu").contains(evt.target)) {
-    closeUserMenu()
-  }
-})
 
 const subStatus  = document.getElementById("sub-status")
 const subRenewal = document.getElementById("sub-renewal")
@@ -330,19 +396,6 @@ async function carregarInfoAssinatura() {
   }
 }
 
-menuProfileBtn.addEventListener("click", async () => {
-  closeUserMenu()
-  profileEmail.value = lastKnownUserEmail
-  profileNewPassword.value = ""
-  profileConfirmPassword.value = ""
-  profilePasswordMessage.classList.remove("form-success")
-  profilePasswordMessage.textContent = ""
-  profileBillingMessage.textContent = ""
-  btnManageBilling.disabled = false
-  btnManageBilling.textContent = "Gerenciar assinatura no Stripe"
-  showOnly("profile")
-  await carregarInfoAssinatura()
-})
 
 btnProfileBack.addEventListener("click", () => {
   showOnly("app")
@@ -470,8 +523,7 @@ async function refreshAccessState() {
     configurarTracking(session.user.id)
     await ensureAppLoaded()
     lastKnownUserEmail = session.user.email
-    userEmailLabel.textContent = session.user.email
-    closeUserMenu()
+    if (userEmailLabel) userEmailLabel.textContent = session.user.email
     if (currentView !== "profile") {
       showOnly("app")
     }
@@ -511,7 +563,6 @@ async function copiarEmailSuporte(btn) {
   setTimeout(() => { btn.textContent = textoOriginal }, 2000)
 }
 
-menuSupportBtn?.addEventListener("click", () => copiarEmailSuporte(menuSupportBtn))
 paywallSupportBtn?.addEventListener("click", () => copiarEmailSuporte(paywallSupportBtn))
 blockedSupportBtn?.addEventListener("click", () => copiarEmailSuporte(blockedSupportBtn))
 btnLogoutBlocked?.addEventListener("click", async () => {

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Palco de Papeis - web</title>
+<title>Palco de Papéis</title>
 </head>
 <body>
   <div id="loading-overlay">
@@ -11,95 +11,134 @@
     <span>Carregando...</span>
   </div>
 
+  <!-- ── Auth: Login / Cadastro ── -->
   <div id="auth-overlay" class="overlay hidden">
+    <div class="overlay-bg-text">
+      <div class="bg-row row-1 blue"><span>A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;</span><span>A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="bg-row row-2 blue"><span>BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;</span><span>BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="bg-row row-3 green"><span>A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;</span><span>A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="bg-row row-4 green"><span>SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;</span><span>SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;</span></div>
+    </div>
     <form id="auth-form" class="auth-card">
-      <h1>Palco de Papeis</h1>
-      <h2 id="auth-mode-label">Entrar</h2>
-      <label>
-        Email
-        <input type="email" id="auth-email" required autocomplete="email">
-      </label>
-      <label>
-        Senha
-        <input type="password" id="auth-password" required autocomplete="current-password" minlength="6">
-      </label>
+      <img src="/assets/design/frase-sua-historia.png" alt="Sua história, Seu Palco" class="auth-card-title-img">
+      <div class="auth-input-wrap">
+        <img src="/assets/design/icon-user.png" alt="">
+        <input type="email" id="auth-email" placeholder="Usuário / Email" required autocomplete="email">
+      </div>
+      <div class="auth-input-wrap">
+        <img src="/assets/design/icon-lock.png" alt="">
+        <input type="password" id="auth-password" placeholder="Senha" required autocomplete="current-password" minlength="6">
+      </div>
       <p id="auth-error" class="form-error"></p>
-      <button type="submit" id="auth-submit">Entrar</button>
-      <a href="#" id="auth-toggle-mode">Nao tem conta? Criar uma</a>
-      <a href="#" id="auth-forgot-password">Esqueci minha senha</a>
+      <img src="/assets/design/palco-pecas.png" alt="Palco" class="auth-palco-img">
+      <button type="submit" id="auth-submit" class="btn-primary">Entrar no Palco</button>
+      <a href="#" id="auth-forgot-password" class="auth-link">Esqueceu a senha?</a>
+      <a href="#" id="auth-toggle-mode" class="auth-link" style="font-size:13px; color:#aaa;">Não tem conta? Criar uma</a>
     </form>
   </div>
 
+  <!-- ── Auth: Confirmar email ── -->
   <div id="confirm-overlay" class="overlay hidden">
+    <div class="overlay-bg-text">
+      <div class="bg-row row-1 blue"><span>A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;</span><span>A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="bg-row row-2 blue"><span>BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;</span><span>BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="bg-row row-3 green"><span>A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;</span><span>A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="bg-row row-4 green"><span>SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;</span><span>SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;</span></div>
+    </div>
     <div class="auth-card">
-      <h1>Palco de Papéis</h1>
-      <h2>Confirme seu email</h2>
-      <p id="confirm-email-desc" style="font-size:13px; color:#ccc; margin:0;"></p>
-      <p style="font-size:12px; color:#888; margin:0;">Não recebeu? Verifique a pasta de spam ou reenvie abaixo.</p>
+      <p class="auth-card-title" style="font-size:20px;">Confirme seu email</p>
+      <p id="confirm-email-desc" style="font-size:13px; color:#ccc; margin:0; font-family:Montserrat,sans-serif;"></p>
+      <p style="font-size:12px; color:#888; margin:0; font-family:Montserrat,sans-serif;">Não recebeu? Verifique a pasta de spam ou reenvie abaixo.</p>
       <p id="confirm-error" class="form-error"></p>
-      <button type="button" id="btn-resend">Reenviar email</button>
-      <button type="button" id="btn-back-to-login" class="secondary">Voltar ao login</button>
+      <button type="button" id="btn-resend" class="btn-primary">Reenviar email</button>
+      <button type="button" id="btn-back-to-login" class="btn-secondary">Voltar ao login</button>
     </div>
   </div>
 
+  <!-- ── Auth: Redefinir senha ── -->
   <div id="reset-overlay" class="overlay hidden">
+    <div class="overlay-bg-text">
+      <div class="bg-row row-1 blue"><span>A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;</span><span>A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="bg-row row-2 blue"><span>BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;</span><span>BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="bg-row row-3 green"><span>A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;</span><span>A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="bg-row row-4 green"><span>SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;</span><span>SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;</span></div>
+    </div>
     <form id="reset-form" class="auth-card">
-      <h1>Redefinir senha</h1>
-      <label>
-        Nova senha
-        <input type="password" id="reset-new-password" required minlength="6" autocomplete="new-password">
-      </label>
-      <label>
-        Confirmar nova senha
-        <input type="password" id="reset-confirm-password" required minlength="6" autocomplete="new-password">
-      </label>
+      <p class="auth-card-title" style="font-size:22px;">Redefinir senha</p>
+      <div class="auth-input-wrap">
+        <img src="/assets/design/icon-lock.png" alt="">
+        <input type="password" id="reset-new-password" placeholder="Nova senha" required minlength="6" autocomplete="new-password">
+      </div>
+      <div class="auth-input-wrap">
+        <img src="/assets/design/icon-lock.png" alt="">
+        <input type="password" id="reset-confirm-password" placeholder="Confirmar nova senha" required minlength="6" autocomplete="new-password">
+      </div>
       <p id="reset-error" class="form-error"></p>
-      <button type="submit" id="reset-submit">Salvar nova senha</button>
+      <button type="submit" id="reset-submit" class="btn-primary">Salvar nova senha</button>
     </form>
   </div>
 
+  <!-- ── Auth: Conta bloqueada ── -->
   <div id="blocked-overlay" class="overlay hidden">
+    <div class="overlay-bg-text">
+      <div class="bg-row row-1 blue"><span>A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;</span><span>A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="bg-row row-3 green"><span>A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;</span><span>A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;</span></div>
+    </div>
     <div class="auth-card">
-      <h1>Palco de Papeis</h1>
-      <p style="font-size:14px; color:#ccc; margin:0;">Sua conta foi suspensa. Entre em contato com o suporte para mais informações.</p>
-      <button type="button" id="btn-logout-blocked" class="secondary">Sair</button>
+      <p class="auth-card-title" style="font-size:20px;">Conta suspensa</p>
+      <p style="font-size:13px; color:#ccc; margin:0; font-family:Montserrat,sans-serif;">Sua conta foi suspensa. Entre em contato com o suporte para mais informações.</p>
+      <button type="button" id="btn-logout-blocked" class="btn-secondary">Sair</button>
       <button type="button" id="blocked-support" class="support-link" data-support-email="thedatabra@gmail.com">Precisa de ajuda? Entre em contato</button>
     </div>
   </div>
 
+  <!-- ── Auth: Paywall ── -->
   <div id="paywall-overlay" class="overlay hidden">
+    <div class="overlay-bg-text">
+      <div class="bg-row row-1 blue"><span>A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;</span><span>A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="bg-row row-2 blue"><span>BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;</span><span>BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="bg-row row-3 green"><span>A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;</span><span>A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="bg-row row-4 green"><span>SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;</span><span>SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;</span></div>
+    </div>
     <div class="auth-card">
-      <h1>Palco de Papeis</h1>
-      <p id="paywall-message">Sua conta ainda nao tem uma assinatura ativa.</p>
+      <img src="/assets/design/frase-sua-historia.png" alt="Sua história, Seu Palco" class="auth-card-title-img">
+      <p id="paywall-message" style="font-size:13px; color:#ccc; margin:0; font-family:Montserrat,sans-serif;">Sua conta ainda não tem uma assinatura ativa.</p>
       <p id="paywall-error" class="form-error"></p>
-      <button type="button" id="btn-subscribe">Assinar agora</button>
-      <button type="button" id="btn-logout" class="secondary">Sair</button>
+      <button type="button" id="btn-subscribe" class="btn-primary">Assinar agora</button>
+      <button type="button" id="btn-logout" class="btn-secondary">Sair</button>
       <button type="button" id="paywall-support" class="support-link" data-support-email="thedatabra@gmail.com">Precisa de ajuda? Entre em contato</button>
     </div>
   </div>
 
+  <!-- ── Perfil ── -->
   <div id="profile-overlay" class="overlay hidden">
-    <div class="auth-card">
-      <h1>Meu perfil</h1>
-      <label>
-        Email
-        <input type="email" id="profile-email" disabled>
-      </label>
-      <h2>Trocar senha</h2>
-      <form id="profile-password-form">
-        <label>
-          Nova senha
-          <input type="password" id="profile-new-password" required minlength="6" autocomplete="new-password">
-        </label>
-        <label>
-          Confirmar nova senha
-          <input type="password" id="profile-confirm-password" required minlength="6" autocomplete="new-password">
-        </label>
+    <div class="overlay-bg-text">
+      <div class="bg-row row-1 blue"><span>A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;</span><span>A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;A FALA&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="bg-row row-2 blue"><span>BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;</span><span>BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;BERTA&nbsp;&nbsp;&nbsp;LIBERTA&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="bg-row row-3 green"><span>A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;</span><span>A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;A AÇÃO&nbsp;&nbsp;&nbsp;</span></div>
+      <div class="bg-row row-4 green"><span>SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;</span><span>SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;SFORMA&nbsp;&nbsp;&nbsp;TRANSFORMA&nbsp;&nbsp;&nbsp;</span></div>
+    </div>
+    <div class="auth-card" style="overflow-y:auto; max-height:90vh;">
+      <p class="auth-card-title" style="font-size:24px;">Meu Perfil</p>
+      <div class="auth-input-wrap">
+        <img src="/assets/design/icon-user.png" alt="">
+        <input type="email" id="profile-email" placeholder="Email" disabled>
+      </div>
+      <p class="auth-section-label">Trocar senha</p>
+      <form id="profile-password-form" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="auth-input-wrap">
+          <img src="/assets/design/icon-lock.png" alt="">
+          <input type="password" id="profile-new-password" placeholder="Nova Senha" required minlength="6" autocomplete="new-password">
+        </div>
+        <div class="auth-input-wrap">
+          <img src="/assets/design/icon-lock.png" alt="">
+          <input type="password" id="profile-confirm-password" placeholder="Confirmar nova senha" required minlength="6" autocomplete="new-password">
+        </div>
         <p id="profile-password-message" class="form-error"></p>
-        <button type="submit">Atualizar senha</button>
+        <button type="submit" class="btn-primary" style="font-size:16px;">Atualizar senha</button>
       </form>
-      <h2>Assinatura</h2>
-      <div id="subscription-info">
+      <p class="auth-section-label">Assinatura</p>
+      <div id="subscription-info" class="subscription-card">
         <div class="sub-row">
           <span class="sub-label">Status</span>
           <span id="sub-status" class="sub-value">—</span>
@@ -110,27 +149,13 @@
         </div>
       </div>
       <p id="profile-billing-message" class="form-error"></p>
-      <button type="button" id="btn-manage-billing">Gerenciar assinatura no Stripe</button>
-      <button type="button" id="btn-profile-back" class="secondary">Voltar ao palco</button>
+      <button type="button" id="btn-manage-billing" class="btn-secondary" style="font-size:14px;">Gerenciar assinatura no Stripe</button>
+      <button type="button" id="btn-profile-back" class="btn-primary">Voltar ao palco</button>
     </div>
   </div>
 
+  <!-- ── App principal ── -->
   <div id="app" class="hidden">
-    <header id="app-header">
-      <span id="app-title">Palco de Papeis</span>
-      <div id="user-menu">
-        <button type="button" id="user-menu-btn" aria-haspopup="true" aria-expanded="false">
-          <span id="user-email">...</span>
-          <svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div id="user-menu-dropdown" class="hidden">
-          <button type="button" id="menu-profile">Meu perfil</button>
-          <button type="button" id="menu-support" data-support-email="thedatabra@gmail.com">Suporte</button>
-          <button type="button" id="menu-logout">Sair</button>
-        </div>
-      </div>
-    </header>
-
     <div id="app-body"></div>
   </div>
 

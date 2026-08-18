@@ -2,10 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "palco-web",
-      "runtimeExecutable": "C:\\Users\\lvalente\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
-      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "docs"],
-      "port": 8765
+      "name": "palco-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 5173
     }
   ]
 }
