@@ -501,32 +501,30 @@ function loadDefaultLayout() {
 
   // Arco esquerdo: prismas (topo), cubos (meio), cilindros (base)
   // Arco direito: espelho do esquerdo
+  // Coroa elíptica: a=0.26, b=0.065, centro em dy=-0.175
+  // θ de 88° (topo) a 8° (lateral) — ângulos medidos a partir do eixo horizontal
   const defaults = [
-    // Arco elíptico compacto — centro deslocado 6% para cima do centro da tela
-    // para que as peças do topo fiquem acima da borda do palco
-    // dy = offset_arco + dyBase  (offset = -0.06)
+    // Arco esquerdo
+    { shape: 'prisma',   size: 'P', dx: -0.01, dy: -0.235 },
+    { shape: 'prisma',   size: 'M', dx: -0.05, dy: -0.234 },
+    { shape: 'prisma',   size: 'G', dx: -0.10, dy: -0.230 },
+    { shape: 'cubo',     size: 'P', dx: -0.14, dy: -0.225 },
+    { shape: 'cubo',     size: 'M', dx: -0.17, dy: -0.218 },
+    { shape: 'cubo',     size: 'G', dx: -0.21, dy: -0.210 },
+    { shape: 'cilindro', size: 'P', dx: -0.23, dy: -0.200 },
+    { shape: 'cilindro', size: 'M', dx: -0.25, dy: -0.190 },
+    { shape: 'cilindro', size: 'G', dx: -0.26, dy: -0.179 },
 
-    // Arco superior esquerdo — elipse mais alta para seguir a borda do palco
-    { shape: 'prisma',   size: 'P', dx: -0.02, dy: -0.30 },
-    { shape: 'prisma',   size: 'M', dx: -0.06, dy: -0.29 },
-    { shape: 'prisma',   size: 'G', dx: -0.09, dy: -0.28 },
-    { shape: 'cubo',     size: 'P', dx: -0.12, dy: -0.27 },
-    { shape: 'cubo',     size: 'M', dx: -0.15, dy: -0.25 },
-    { shape: 'cubo',     size: 'G', dx: -0.17, dy: -0.23 },
-    { shape: 'cilindro', size: 'P', dx: -0.20, dy: -0.21 },
-    { shape: 'cilindro', size: 'M', dx: -0.22, dy: -0.18 },
-    { shape: 'cilindro', size: 'G', dx: -0.24, dy: -0.15 },
-
-    // Arco superior direito (espelho)
-    { shape: 'prisma',   size: 'P', dx:  0.02, dy: -0.30 },
-    { shape: 'prisma',   size: 'M', dx:  0.06, dy: -0.29 },
-    { shape: 'prisma',   size: 'G', dx:  0.09, dy: -0.28 },
-    { shape: 'cubo',     size: 'P', dx:  0.12, dy: -0.27 },
-    { shape: 'cubo',     size: 'M', dx:  0.15, dy: -0.25 },
-    { shape: 'cubo',     size: 'G', dx:  0.17, dy: -0.23 },
-    { shape: 'cilindro', size: 'P', dx:  0.20, dy: -0.21 },
-    { shape: 'cilindro', size: 'M', dx:  0.22, dy: -0.18 },
-    { shape: 'cilindro', size: 'G', dx:  0.24, dy: -0.15 },
+    // Arco direito (espelho)
+    { shape: 'prisma',   size: 'P', dx:  0.01, dy: -0.235 },
+    { shape: 'prisma',   size: 'M', dx:  0.05, dy: -0.234 },
+    { shape: 'prisma',   size: 'G', dx:  0.10, dy: -0.230 },
+    { shape: 'cubo',     size: 'P', dx:  0.14, dy: -0.225 },
+    { shape: 'cubo',     size: 'M', dx:  0.17, dy: -0.218 },
+    { shape: 'cubo',     size: 'G', dx:  0.21, dy: -0.210 },
+    { shape: 'cilindro', size: 'P', dx:  0.23, dy: -0.200 },
+    { shape: 'cilindro', size: 'M', dx:  0.25, dy: -0.190 },
+    { shape: 'cilindro', size: 'G', dx:  0.26, dy: -0.179 },
   ]
 
   for (const p of defaults) {
