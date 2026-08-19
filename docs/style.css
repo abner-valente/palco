@@ -142,6 +142,14 @@ html, body {
 }
 .auth-input-wrap input::placeholder { color: rgba(255,255,255,0.40); }
 .auth-input-wrap input:disabled { opacity: 0.6; cursor: not-allowed; }
+.auth-input-wrap input:-webkit-autofill,
+.auth-input-wrap input:-webkit-autofill:hover,
+.auth-input-wrap input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px rgba(0,0,0,0.01) inset;
+  -webkit-text-fill-color: rgba(255,255,255,0.8);
+  transition: background-color 5000s ease-in-out 0s;
+  caret-color: #fff;
+}
 
 /* Botão primário (gradiente verde) */
 .btn-primary {
