@@ -1,4 +1,4 @@
-const SIZE_PX = { P: 14, M: 20, G: 28 }
+const SIZE_PX = { P: 18, M: 26, G: 36 }
 const MIN_RADIUS = 14
 const MAX_RADIUS = 100
 const RESIZE_STEP = 3
@@ -506,27 +506,27 @@ function loadDefaultLayout() {
     // para que as peças do topo fiquem acima da borda do palco
     // dy = offset_arco + dyBase  (offset = -0.06)
 
-    // --- Lado esquerdo ---
-    { shape: 'prisma',   size: 'P', dx: -0.05, dy: -0.27 },
-    { shape: 'prisma',   size: 'M', dx: -0.13, dy: -0.23 },
-    { shape: 'prisma',   size: 'G', dx: -0.20, dy: -0.17 },
-    { shape: 'cubo',     size: 'P', dx: -0.24, dy: -0.10 },
-    { shape: 'cubo',     size: 'M', dx: -0.26, dy: -0.02 },
-    { shape: 'cubo',     size: 'G', dx: -0.24, dy:  0.07 },
-    { shape: 'cilindro', size: 'P', dx: -0.20, dy:  0.14 },
-    { shape: 'cilindro', size: 'M', dx: -0.13, dy:  0.20 },
-    { shape: 'cilindro', size: 'G', dx: -0.05, dy:  0.23 },
+    // Arco superior esquerdo: ângulos de 5° a 85° do eixo vertical (semicírculo superior)
+    { shape: 'prisma',   size: 'P', dx: -0.02, dy: -0.28 },
+    { shape: 'prisma',   size: 'M', dx: -0.07, dy: -0.27 },
+    { shape: 'prisma',   size: 'G', dx: -0.11, dy: -0.25 },
+    { shape: 'cubo',     size: 'P', dx: -0.16, dy: -0.23 },
+    { shape: 'cubo',     size: 'M', dx: -0.19, dy: -0.20 },
+    { shape: 'cubo',     size: 'G', dx: -0.22, dy: -0.16 },
+    { shape: 'cilindro', size: 'P', dx: -0.25, dy: -0.12 },
+    { shape: 'cilindro', size: 'M', dx: -0.26, dy: -0.07 },
+    { shape: 'cilindro', size: 'G', dx: -0.27, dy: -0.02 },
 
-    // --- Lado direito (espelho) ---
-    { shape: 'prisma',   size: 'P', dx:  0.05, dy: -0.27 },
-    { shape: 'prisma',   size: 'M', dx:  0.13, dy: -0.23 },
-    { shape: 'prisma',   size: 'G', dx:  0.20, dy: -0.17 },
-    { shape: 'cubo',     size: 'P', dx:  0.24, dy: -0.10 },
-    { shape: 'cubo',     size: 'M', dx:  0.26, dy: -0.02 },
-    { shape: 'cubo',     size: 'G', dx:  0.24, dy:  0.07 },
-    { shape: 'cilindro', size: 'P', dx:  0.20, dy:  0.14 },
-    { shape: 'cilindro', size: 'M', dx:  0.13, dy:  0.20 },
-    { shape: 'cilindro', size: 'G', dx:  0.05, dy:  0.23 },
+    // Arco superior direito (espelho)
+    { shape: 'prisma',   size: 'P', dx:  0.02, dy: -0.28 },
+    { shape: 'prisma',   size: 'M', dx:  0.07, dy: -0.27 },
+    { shape: 'prisma',   size: 'G', dx:  0.11, dy: -0.25 },
+    { shape: 'cubo',     size: 'P', dx:  0.16, dy: -0.23 },
+    { shape: 'cubo',     size: 'M', dx:  0.19, dy: -0.20 },
+    { shape: 'cubo',     size: 'G', dx:  0.22, dy: -0.16 },
+    { shape: 'cilindro', size: 'P', dx:  0.25, dy: -0.12 },
+    { shape: 'cilindro', size: 'M', dx:  0.26, dy: -0.07 },
+    { shape: 'cilindro', size: 'G', dx:  0.27, dy: -0.02 },
   ]
 
   for (const p of defaults) {
