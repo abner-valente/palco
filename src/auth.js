@@ -96,20 +96,15 @@ const APP_BODY_HTML = `
 
 <div id="side-menu-overlay" class="hidden"></div>
 <nav id="side-menu" class="hidden">
-  <div id="side-menu-header">
-    <span id="user-email">...</span>
-    <button id="menu-close-btn" aria-label="Fechar menu">
-      <img id="menu-close-img" src="/assets/design/menu-close.png" alt="Fechar">
-    </button>
-  </div>
-  <button id="menu-profile" class="side-menu-btn">Meu perfil</button>
-  <button id="btn-save" class="side-menu-btn">Salvar (.json)</button>
-  <label class="file-btn-menu">
-    Carregar (.json)
+  <button id="menu-close-btn" aria-label="Fechar menu">✕</button>
+  <button id="menu-profile" class="side-menu-btn">MEU PERFIL</button>
+  <button id="btn-save" class="side-menu-btn">SALVAR (.json)</button>
+  <label class="file-btn-menu side-menu-btn">
+    CARREGAR (.json)
     <input type="file" id="load-input" accept="application/json">
   </label>
-  <button id="menu-support" class="side-menu-btn" data-support-email="thedatabra@gmail.com">Suporte</button>
-  <button id="menu-logout" class="side-menu-btn">Sair</button>
+  <a href="https://wa.me/556798813139" target="_blank" rel="noopener" class="side-menu-btn">SUPORTE</a>
+  <button id="menu-logout" class="side-menu-btn">SAIR</button>
 </nav>
 
 <section id="stage-section">
@@ -123,16 +118,7 @@ const APP_BODY_HTML = `
         <path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
       </svg>
     </button>
-    <div id="zoom-control">
-      <span id="zoom-label">Zoom: 100%</span>
-      <div class="zoom-row">
-        <button id="zoom-minus">-</button>
-        <input type="range" id="zoom-slider" min="50" max="250" value="96">
-        <button id="zoom-plus">+</button>
-      </div>
-    </div>
     <div id="top-bar"></div>
-    <div id="help-bar">Arraste da paleta | Scroll: redimensionar | Botão direito: conectar | Del/lixeira: remover | Duplo clique: rotular</div>
   </div>
 </section>
 
@@ -141,25 +127,29 @@ const APP_BODY_HTML = `
     <div class="palette-col" id="col-pieces"></div>
     <div class="palette-col" id="col-bases"></div>
   </aside>
-  <div id="palette-badges">
-    <img src="/assets/design/selo-empatia.png" alt="Empatia">
-    <img src="/assets/design/selo-fortalecimento.png" alt="Fortalecimento Social">
+</section>
+
+<section id="badges-section">
+  <img src="/assets/design/selo-empatia.png" alt="Empatia" class="badge-item">
+  <div id="badges-shapes">
+    <img src="/assets/design/elipse-vermelha.png" alt="">
+    <img src="/assets/design/losango-azul.png" alt="">
+    <img src="/assets/design/elipse-verde.png" alt="">
   </div>
+  <img src="/assets/design/selo-fortalecimento.png" alt="Fortalecimento Social" class="badge-item">
 </section>
 
 <footer id="app-footer">
-  <div class="footer-logos">
-    <img src="/assets/design/logo-palco.png" alt="Palco de Papéis">
-    <img src="/assets/design/logo-analucia.png" alt="Ana L. Tavares">
-  </div>
+  <img src="/assets/design/logo-palco.png" alt="Palco de Papéis" class="footer-logo">
+  <img src="/assets/design/logo-analucia.png" alt="Ana L. Tavares" class="footer-logo">
   <div class="footer-contacts">
     <p class="footer-contacts-title">CONTATOS</p>
-    <span>INSTAGRAM</span>
-    <span>FACEBOOK</span>
-    <span>WHATSAPP</span>
+    <a href="http://localhost:1234" target="_blank" rel="noopener">INSTAGRAM</a>
+    <a href="http://localhost:1234" target="_blank" rel="noopener">FACEBOOK</a>
+    <a href="http://localhost:1234" target="_blank" rel="noopener">WHATSAPP</a>
   </div>
   <p class="footer-email">contato@analuciatavares.com.br</p>
-  <button id="footer-support" class="footer-support-btn" data-support-email="thedatabra@gmail.com">SUPORTE</button>
+  <a href="https://wa.me/556798813139" target="_blank" rel="noopener" class="footer-support-btn">SUPORTE</a>
 </footer>
 `
 
@@ -183,12 +173,10 @@ async function ensureAppLoaded() {
   function openMenu() {
     sideMenu.classList.remove("hidden")
     sideOverlay.classList.remove("hidden")
-    if (menuIconImg) menuIconImg.src = "/assets/design/menu-close.png"
   }
   function closeMenu() {
     sideMenu.classList.add("hidden")
     sideOverlay.classList.add("hidden")
-    if (menuIconImg) menuIconImg.src = "/assets/design/menu-open.png"
   }
 
   menuToggle?.addEventListener("click", () => {
@@ -197,9 +185,6 @@ async function ensureAppLoaded() {
   menuCloseBtn?.addEventListener("click", closeMenu)
   sideOverlay?.addEventListener("click", closeMenu)
 
-  // Footer suporte
-  const footerSupport = document.getElementById("footer-support")
-  footerSupport?.addEventListener("click", () => copiarEmailSuporte(footerSupport))
 
   // Logout e perfil via side menu
   menuLogoutBtn?.addEventListener("click", () => { closeMenu(); handleLogout() })

@@ -269,65 +269,70 @@ html, body {
 }
 #menu-icon-img { width: 40px; height: 27px; }
 
-/* Side menu (drawer) */
+/* Side menu — janela flutuante no canto superior direito */
 #side-menu {
-  position: fixed; top: 0; right: 0; bottom: 0; z-index: 200;
-  width: 280px;
-  background: #141414;
-  border-left: 1px solid #1F1F1F;
-  display: flex; flex-direction: column;
-  padding: 0;
-  box-shadow: -4px 0 24px rgba(0,0,0,0.6);
-  transform: translateX(0);
+  position: fixed;
+  top: 72px;
+  right: 16px;
+  z-index: 200;
+  width: 300px;
+  background: rgba(20, 20, 20, 0.92);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.10);
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  padding: 16px 0 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+  opacity: 1;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  transform: translateY(0);
+}
+#side-menu.hidden {
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
 }
 
-#side-menu.hidden { display: none; }
-
-#side-menu-header {
-  height: 89px;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 20px;
-  border-bottom: 1px solid #1F1F1F;
-}
-#user-email {
-  font-size: 13px; color: #999; font-family: Montserrat, sans-serif;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  max-width: 180px;
-}
 #menu-close-btn {
-  background: none; border: none; cursor: pointer; padding: 4px;
-  display: flex; align-items: center;
+  position: absolute;
+  top: 12px; right: 16px;
+  background: none; border: none; cursor: pointer;
+  font-size: 20px; color: #E05A2B;
+  line-height: 1;
 }
-#menu-close-img { width: 24px; height: 24px; }
 
 .side-menu-btn {
   background: none; border: none;
-  text-align: left; padding: 16px 20px;
-  font-family: 'Montagu Slab', serif;
-  font-size: 16px; color: #F1E8E1;
-  cursor: pointer; border-bottom: 1px solid #1F1F1F;
+  text-align: left; padding: 18px 28px;
+  font-family: 'Libre Bodoni', serif;
+  font-style: italic;
+  font-size: 22px; color: #F1E8E1;
+  cursor: pointer;
   display: block; width: 100%;
   text-decoration: none;
+  letter-spacing: 0.02em;
 }
-.side-menu-btn:hover { background: #1F1F1F; }
+.side-menu-btn:hover { color: #fff; }
 
 .file-btn-menu {
-  background: none; border: none;
-  text-align: left; padding: 16px 20px;
-  font-family: 'Montagu Slab', serif;
-  font-size: 16px; color: #F1E8E1;
-  cursor: pointer; border-bottom: 1px solid #1F1F1F;
-  display: block; width: 100%;
   position: relative;
+  text-align: left; padding: 18px 28px;
+  font-family: 'Libre Bodoni', serif;
+  font-style: italic;
+  font-size: 22px; color: #F1E8E1;
+  cursor: pointer;
+  display: block; width: 100%;
+  box-sizing: border-box;
 }
-.file-btn-menu:hover { background: #1F1F1F; }
+.file-btn-menu:hover { color: #fff; }
 .file-btn-menu input[type="file"] {
   position: absolute; inset: 0; opacity: 0; cursor: pointer;
 }
 
 #side-menu-overlay {
   position: fixed; inset: 0; z-index: 199;
-  background: rgba(0,0,0,0.5);
 }
 #side-menu-overlay.hidden { display: none; }
 
@@ -397,30 +402,8 @@ html, body {
 }
 #trash.highlight { background: #782828; border-color: #e65a5a; color: #f0dcdc; }
 
-/* Zoom */
-#zoom-control {
-  position: absolute; right: 16px; bottom: 14px;
-  display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
-}
-#zoom-label { font-size: 12px; color: #b4b4b4; font-family: Montserrat, sans-serif; }
-.zoom-row { display: flex; align-items: center; gap: 6px; }
-.zoom-row button {
-  width: 22px; height: 22px;
-  background: rgba(60,55,65,0.8); border: 1px solid #786d7d;
-  color: #ddd; border-radius: 4px; cursor: pointer;
-}
-#zoom-slider { width: 120px; }
-
-/* Top bar (save/load — agora dentro do menu, mas mantemos IDs para o JS) */
+/* Top bar */
 #top-bar { display: none; }
-
-/* Help bar */
-#help-bar {
-  position: absolute; left: 10px; bottom: 4px;
-  font-size: 11px; color: rgba(255,255,255,0.35);
-  font-family: Montserrat, sans-serif;
-  pointer-events: none;
-}
 
 /* Shape fallbacks */
 .shape-fallback { border: 2px solid #3c2814; }
@@ -448,6 +431,7 @@ html, body {
   height: 203px;
   overflow-x: auto;
   overflow-y: hidden;
+  justify-content: center;
 }
 
 #palette::-webkit-scrollbar { height: 4px; }
@@ -483,17 +467,31 @@ html, body {
 }
 .palette-item .label { font-size: 11px; color: #aaa; pointer-events: none; font-family: Montserrat, sans-serif; }
 
-/* Badges decorativos */
-#palette-badges {
+/* Seção de selos — entre paleta e rodapé */
+#badges-section {
+  width: 100%;
+  background: #050505;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 48px 40px;
+  box-sizing: border-box;
+}
+.badge-item {
+  height: 150px;
+  width: auto;
+  flex-shrink: 0;
+}
+#badges-shapes {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 0 24px;
-  flex-shrink: 0;
+  gap: 8px;
 }
-#palette-badges img { height: 80px; width: auto; }
+#badges-shapes img {
+  height: 80px;
+  width: auto;
+}
 
 /* Label editor */
 #label-editor {
@@ -509,19 +507,21 @@ html, body {
   background: #141414;
   padding: 40px 60px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 32px;
   flex-wrap: wrap;
   min-height: 267px;
 }
 
-.footer-logos {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.footer-logo {
+  height: auto;
+  width: auto;
+  max-height: 169px;
+  max-width: 260px;
+  object-fit: contain;
+  align-self: center;
 }
-.footer-logos img { height: 52px; width: auto; }
 
 .footer-contacts {
   display: flex;
@@ -531,14 +531,14 @@ html, body {
 .footer-contacts-title {
   font-family: 'Libre Bodoni', serif;
   font-style: italic;
-  font-size: 24px;
+  font-size: 36px;
   color: #F1E8E1;
   margin: 0;
 }
 .footer-contacts a, .footer-contacts span {
   font-family: 'Libre Bodoni', serif;
   font-style: italic;
-  font-size: 32px;
+  font-size: 22px;
   color: #F1E8E1;
   text-decoration: none;
   display: block;
