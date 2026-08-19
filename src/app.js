@@ -505,26 +505,26 @@ function loadDefaultLayout() {
   // θ de 88° (topo) a 8° (lateral) — ângulos medidos a partir do eixo horizontal
   const defaults = [
     // Arco esquerdo
-    { shape: 'prisma',   size: 'P', dx: -0.01, dy: -0.235 },
-    { shape: 'prisma',   size: 'M', dx: -0.05, dy: -0.234 },
-    { shape: 'prisma',   size: 'G', dx: -0.10, dy: -0.230 },
-    { shape: 'cubo',     size: 'P', dx: -0.14, dy: -0.225 },
-    { shape: 'cubo',     size: 'M', dx: -0.17, dy: -0.218 },
-    { shape: 'cubo',     size: 'G', dx: -0.21, dy: -0.210 },
-    { shape: 'cilindro', size: 'P', dx: -0.23, dy: -0.200 },
-    { shape: 'cilindro', size: 'M', dx: -0.25, dy: -0.190 },
-    { shape: 'cilindro', size: 'G', dx: -0.26, dy: -0.179 },
+    { shape: 'prisma',   size: 'P', dx: -0.03, dy: -0.265 },
+    { shape: 'prisma',   size: 'M', dx: -0.045, dy: -0.268 },
+    { shape: 'prisma',   size: 'G', dx: -0.063, dy: -0.27 },
+    { shape: 'cubo',     size: 'P', dx: -0.084, dy: -0.249 },
+    { shape: 'cubo',     size: 'M', dx: -0.103, dy: -0.248 },
+    { shape: 'cubo',     size: 'G', dx: -0.128, dy: -0.241 },
+    { shape: 'cilindro', size: 'P', dx: -0.145, dy: -0.225 },
+    { shape: 'cilindro', size: 'M', dx: -0.158, dy: -0.22 },
+    { shape: 'cilindro', size: 'G', dx: -0.177, dy: -0.21 },
 
     // Arco direito (espelho)
-    { shape: 'prisma',   size: 'P', dx:  0.01, dy: -0.235 },
-    { shape: 'prisma',   size: 'M', dx:  0.05, dy: -0.234 },
-    { shape: 'prisma',   size: 'G', dx:  0.10, dy: -0.230 },
-    { shape: 'cubo',     size: 'P', dx:  0.14, dy: -0.225 },
-    { shape: 'cubo',     size: 'M', dx:  0.17, dy: -0.218 },
-    { shape: 'cubo',     size: 'G', dx:  0.21, dy: -0.210 },
-    { shape: 'cilindro', size: 'P', dx:  0.23, dy: -0.200 },
-    { shape: 'cilindro', size: 'M', dx:  0.25, dy: -0.190 },
-    { shape: 'cilindro', size: 'G', dx:  0.26, dy: -0.179 },
+    { shape: 'prisma',   size: 'P', dx:  0.01, dy: -0.265},
+    { shape: 'prisma',   size: 'M', dx:  0.025, dy: -0.268 },
+    { shape: 'prisma',   size: 'G', dx:  0.044, dy: -0.27 },
+    { shape: 'cubo',     size: 'P', dx:  0.065, dy: -0.249 },
+    { shape: 'cubo',     size: 'M', dx:  0.082, dy: -0.248 },
+    { shape: 'cubo',     size: 'G', dx:  0.105, dy: -0.241 },
+    { shape: 'cilindro', size: 'P', dx:  0.128, dy: -0.229 },
+    { shape: 'cilindro', size: 'M', dx:  0.141, dy: -0.225 },
+    { shape: 'cilindro', size: 'G', dx:  0.160, dy: -0.219 },
   ]
 
   for (const p of defaults) {
