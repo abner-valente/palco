@@ -506,27 +506,27 @@ function loadDefaultLayout() {
     // para que as peças do topo fiquem acima da borda do palco
     // dy = offset_arco + dyBase  (offset = -0.06)
 
-    // Arco superior esquerdo: "coroa" de 5° a 65° — peças concentradas no topo do palco
-    { shape: 'prisma',   size: 'P', dx: -0.02, dy: -0.26 },
-    { shape: 'prisma',   size: 'M', dx: -0.06, dy: -0.25 },
-    { shape: 'prisma',   size: 'G', dx: -0.09, dy: -0.24 },
-    { shape: 'cubo',     size: 'P', dx: -0.12, dy: -0.23 },
-    { shape: 'cubo',     size: 'M', dx: -0.15, dy: -0.21 },
-    { shape: 'cubo',     size: 'G', dx: -0.18, dy: -0.19 },
-    { shape: 'cilindro', size: 'P', dx: -0.20, dy: -0.17 },
-    { shape: 'cilindro', size: 'M', dx: -0.22, dy: -0.14 },
-    { shape: 'cilindro', size: 'G', dx: -0.24, dy: -0.11 },
+    // Arco superior esquerdo — elipse mais alta para seguir a borda do palco
+    { shape: 'prisma',   size: 'P', dx: -0.02, dy: -0.30 },
+    { shape: 'prisma',   size: 'M', dx: -0.06, dy: -0.29 },
+    { shape: 'prisma',   size: 'G', dx: -0.09, dy: -0.28 },
+    { shape: 'cubo',     size: 'P', dx: -0.12, dy: -0.27 },
+    { shape: 'cubo',     size: 'M', dx: -0.15, dy: -0.25 },
+    { shape: 'cubo',     size: 'G', dx: -0.17, dy: -0.23 },
+    { shape: 'cilindro', size: 'P', dx: -0.20, dy: -0.21 },
+    { shape: 'cilindro', size: 'M', dx: -0.22, dy: -0.18 },
+    { shape: 'cilindro', size: 'G', dx: -0.24, dy: -0.15 },
 
     // Arco superior direito (espelho)
-    { shape: 'prisma',   size: 'P', dx:  0.02, dy: -0.26 },
-    { shape: 'prisma',   size: 'M', dx:  0.06, dy: -0.25 },
-    { shape: 'prisma',   size: 'G', dx:  0.09, dy: -0.24 },
-    { shape: 'cubo',     size: 'P', dx:  0.12, dy: -0.23 },
-    { shape: 'cubo',     size: 'M', dx:  0.15, dy: -0.21 },
-    { shape: 'cubo',     size: 'G', dx:  0.18, dy: -0.19 },
-    { shape: 'cilindro', size: 'P', dx:  0.20, dy: -0.17 },
-    { shape: 'cilindro', size: 'M', dx:  0.22, dy: -0.14 },
-    { shape: 'cilindro', size: 'G', dx:  0.24, dy: -0.11 },
+    { shape: 'prisma',   size: 'P', dx:  0.02, dy: -0.30 },
+    { shape: 'prisma',   size: 'M', dx:  0.06, dy: -0.29 },
+    { shape: 'prisma',   size: 'G', dx:  0.09, dy: -0.28 },
+    { shape: 'cubo',     size: 'P', dx:  0.12, dy: -0.27 },
+    { shape: 'cubo',     size: 'M', dx:  0.15, dy: -0.25 },
+    { shape: 'cubo',     size: 'G', dx:  0.17, dy: -0.23 },
+    { shape: 'cilindro', size: 'P', dx:  0.20, dy: -0.21 },
+    { shape: 'cilindro', size: 'M', dx:  0.22, dy: -0.18 },
+    { shape: 'cilindro', size: 'G', dx:  0.24, dy: -0.15 },
   ]
 
   for (const p of defaults) {
