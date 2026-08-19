@@ -412,50 +412,42 @@ html, body {
 .shape-fallback.prisma  { background: #8b653c; border-radius: 3px; }
 .base-fallback { border: 2px solid #3c2814; border-radius: 50%; }
 
-/* Palette section */
-#palette-section {
-  width: 100%;
-  background: #141414;
-  border-top: 4px solid #1F1F1F;
-  border-bottom: 4px solid #1F1F1F;
+/* Palette overlay — base do palco */
+#palette-overlay {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  align-items: center;
-  min-height: 203px;
-  position: relative;
-  overflow: hidden;
+  gap: 16px;
+  z-index: 10;
+  pointer-events: none;
 }
 
-#palette {
-  display: flex;
-  flex: 1;
-  height: 203px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  justify-content: center;
-}
-
-#palette::-webkit-scrollbar { height: 4px; }
-#palette::-webkit-scrollbar-thumb { background: #3c3741; border-radius: 2px; }
-
-.palette-col {
+.palette-pill {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0 12px;
-  gap: 0;
+  gap: 4px;
+  padding: 10px 16px;
+  background: rgba(10, 10, 10, 0.72);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 40px;
+  backdrop-filter: blur(12px);
+  pointer-events: all;
+  overflow-x: auto;
+  max-width: 45vw;
   flex-shrink: 0;
 }
 
-.palette-col:first-child {
-  border-right: 1px solid #1F1F1F;
-}
+.palette-pill::-webkit-scrollbar { height: 3px; }
+.palette-pill::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
 
 .palette-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 10px 8px;
+  padding: 6px 6px;
   cursor: grab;
   touch-action: none;
   flex-shrink: 0;
@@ -465,7 +457,7 @@ html, body {
   object-fit: contain; pointer-events: none;
   -webkit-user-drag: none;
 }
-.palette-item .label { font-size: 11px; color: #aaa; pointer-events: none; font-family: Montserrat, sans-serif; }
+.palette-item .label { display: none; }
 
 /* Seção de selos — entre paleta e rodapé */
 #badges-section {

@@ -119,14 +119,11 @@ const APP_BODY_HTML = `
       </svg>
     </button>
     <div id="top-bar"></div>
+    <div id="palette-overlay">
+      <div class="palette-pill" id="col-pieces"></div>
+      <div class="palette-pill" id="col-bases"></div>
+    </div>
   </div>
-</section>
-
-<section id="palette-section">
-  <aside id="palette">
-    <div class="palette-col" id="col-pieces"></div>
-    <div class="palette-col" id="col-bases"></div>
-  </aside>
 </section>
 
 <section id="badges-section">

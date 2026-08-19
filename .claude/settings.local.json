@@ -10,7 +10,9 @@
       "Bash(\"./venv/Scripts/python.exe\" -m py_compile main.py pieces.py)",
       "Bash(ls .claude)",
       "Bash(mkdir -p .claude)",
-      "Bash(netstat -ano)"
+      "Bash(netstat -ano)",
+      "Read(//c/Users/lvalente/Downloads/**)",
+      "Bash(unzip -o \"Site Ana Lucia T.zip\" -d \"figma_export\")"
     ]
   }
 }
