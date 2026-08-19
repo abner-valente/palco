@@ -62,8 +62,8 @@ html, body {
   display: flex;
 }
 .bg-row span { display: inline-block; }
-.bg-row.row-1, .bg-row.row-3 { animation: marquee-left  28s linear infinite; }
-.bg-row.row-2, .bg-row.row-4 { animation: marquee-right 28s linear infinite; }
+.bg-row.row-1 { animation: marquee-left  36s linear infinite; }
+.bg-row.row-2 { animation: marquee-right 36s linear infinite; }
 .bg-row.blue  { font-size: 160px; color: #0097D8; }
 .bg-row.green { font-size: 120px; color: #39A67D; }
 
