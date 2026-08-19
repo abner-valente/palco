@@ -41,7 +41,7 @@ let editingPieceId = null
 
 /* ── Refs de DOM — atribuídas em initApp() ── */
 let stageWrapper, itemsLayer, connectionsLayer, colPieces, colBases
-let trashEl, stageBg, zoomSlider, zoomLabel, labelEditor, labelInput
+let trashEl, stageBg, labelEditor, labelInput
 
 /* ── Utilitários ── */
 function newId() { return ++nextId }
@@ -89,10 +89,6 @@ function buildPalette() {
     visual.style.height = px + "px"
     visual.appendChild(makePieceVisual(shape))
     item.appendChild(visual)
-    const label = document.createElement("span")
-    label.className = "label"
-    label.textContent = `${shape.slice(0, 3)} ${size}`
-    item.appendChild(label)
     item.addEventListener("pointerdown", (evt) => startPaletteDrag(evt, item))
     colPieces.appendChild(item)
   }
@@ -407,8 +403,6 @@ function loadSessionData(data) {
 
 function applyZoom(value) {
   stageBg.style.transform = `scale(${value / 100})`
-  zoomLabel.textContent = `Zoom palco: ${value}%`
-  zoomSlider.value = value
 }
 
 /* ── initApp — chamado por auth.js após injetar o HTML ── */
@@ -420,8 +414,6 @@ export function initApp() {
   colBases         = document.getElementById("col-bases")
   trashEl          = document.getElementById("trash")
   stageBg          = document.getElementById("stage-bg")
-  zoomSlider       = document.getElementById("zoom-slider")
-  zoomLabel        = document.getElementById("zoom-label")
   labelEditor      = document.getElementById("label-editor")
   labelInput       = document.getElementById("label-input")
 
@@ -454,13 +446,6 @@ export function initApp() {
     }
   })
 
-  zoomSlider.addEventListener("input", () => applyZoom(Number(zoomSlider.value)))
-  document.getElementById("zoom-minus").addEventListener("click", () => {
-    applyZoom(clamp(Number(zoomSlider.value) - 10, 50, 250))
-  })
-  document.getElementById("zoom-plus").addEventListener("click", () => {
-    applyZoom(clamp(Number(zoomSlider.value) + 10, 50, 250))
-  })
 
   document.getElementById("btn-save").addEventListener("click", () => {
     const data = serializeSession()

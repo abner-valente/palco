@@ -158,10 +158,10 @@ async function ensureAppLoaded() {
   document.getElementById("app-body").innerHTML = APP_BODY_HTML
 
   // Resolve refs dinâmicas após injeção do HTML
-  userEmailLabel = document.getElementById("user-email")
+  userEmailLabel = null // email removido do menu
   menuLogoutBtn  = document.getElementById("menu-logout")
   menuProfileBtn = document.getElementById("menu-profile")
-  menuSupportBtn = document.getElementById("menu-support")
+  menuSupportBtn = null // suporte agora é link direto WhatsApp
 
   // Hamburguer menu
   const menuToggle    = document.getElementById("menu-toggle")
