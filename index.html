@@ -19,6 +19,7 @@
       <div class="bg-row row-2 green"><span>A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;</span><span>A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
     </div>
     <form id="auth-form" class="auth-card">
+      <span id="auth-mode-label" style="display:none">Entrar</span>
       <img src="/assets/design/frase-sua-historia.png" alt="Sua história, Seu Palco" class="auth-card-title-img">
       <div class="auth-input-wrap">
         <img src="/assets/design/icon-user.png" alt="">
@@ -27,6 +28,10 @@
       <div class="auth-input-wrap">
         <img src="/assets/design/icon-lock.png" alt="">
         <input type="password" id="auth-password" placeholder="Senha" required autocomplete="current-password" minlength="6">
+      </div>
+      <div class="auth-input-wrap" id="auth-confirm-wrap" style="display:none">
+        <img src="/assets/design/icon-lock.png" alt="">
+        <input type="password" id="auth-confirm-password" placeholder="Confirmar senha" minlength="6">
       </div>
       <p id="auth-error" class="form-error"></p>
       <img src="/assets/design/palco-pecas.png" alt="Palco" class="auth-palco-img">

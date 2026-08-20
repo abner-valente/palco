@@ -247,13 +247,18 @@ btnBackToLogin.addEventListener("click", () => {
   showOnly("auth")
 })
 
+const authConfirmWrap = document.getElementById("auth-confirm-wrap")
+const authConfirmPassword = document.getElementById("auth-confirm-password")
+
 authToggleLink.addEventListener("click", (evt) => {
   evt.preventDefault()
   authMode = authMode === "login" ? "signup" : "login"
   authModeLabel.textContent = authMode === "login" ? "Entrar" : "Criar conta"
-  authSubmitBtn.textContent = authMode === "login" ? "Entrar" : "Criar conta"
+  authSubmitBtn.textContent = authMode === "login" ? "Entrar no Palco" : "Criar conta"
   authToggleLink.textContent =
     authMode === "login" ? "Nao tem conta? Criar uma" : "Ja tem conta? Entrar"
+  authConfirmWrap.style.display = authMode === "signup" ? "flex" : "none"
+  authConfirmPassword.value = ""
   authError.classList.remove("form-success")
   authError.textContent = ""
 })
@@ -264,6 +269,11 @@ authForm.addEventListener("submit", async (evt) => {
   authError.textContent = ""
   const email = authEmail.value.trim()
   const password = authPassword.value
+
+  if (authMode === "signup" && password !== authConfirmPassword.value) {
+    authError.textContent = "As senhas não coincidem."
+    return
+  }
 
   const label = authMode === "login" ? "Entrando..." : "Criando conta..."
   authSubmitBtn.disabled = true
