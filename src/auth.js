@@ -112,14 +112,14 @@ const APP_BODY_HTML = `
     <img id="stage-bg" src="/assets/design/cenario-palco.png" alt="Palco">
     <svg id="connections-layer"></svg>
     <div id="items-layer"></div>
-    <button id="trash" title="Arraste um item aqui para remover">
-      <svg viewBox="0 0 24 24" width="20" height="20">
-        <path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-      </svg>
-    </button>
     <div id="top-bar"></div>
     <div id="palette-overlay">
+      <button id="trash" title="Arraste um item aqui para remover">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </button>
       <div class="palette-pill" id="col-pieces"></div>
       <div class="palette-pill" id="col-bases"></div>
     </div>
