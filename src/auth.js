@@ -141,9 +141,8 @@ const APP_BODY_HTML = `
   <img src="/assets/design/logo-analucia.png" alt="Ana L. Tavares" class="footer-logo">
   <div class="footer-contacts">
     <p class="footer-contacts-title">CONTATOS</p>
-    <a href="http://localhost:1234" target="_blank" rel="noopener">INSTAGRAM</a>
-    <a href="http://localhost:1234" target="_blank" rel="noopener">FACEBOOK</a>
-    <a href="http://localhost:1234" target="_blank" rel="noopener">WHATSAPP</a>
+    <a href="https://www.instagram.com/palcodepapeis/" target="_blank" rel="noopener">INSTAGRAM</a>
+    <a href="https://wa.me/5516981960421" target="_blank" rel="noopener">WHATSAPP</a>
   </div>
   <p class="footer-email">contato@analuciatavares.com.br</p>
   <a href="https://wa.me/556798813139" target="_blank" rel="noopener" class="footer-support-btn">SUPORTE</a>
