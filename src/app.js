@@ -484,36 +484,53 @@ function loadDefaultLayout() {
   const cx = w / 2
   const cy = h / 2
 
-  // Arco esquerdo: prismas (topo), cubos (meio), cilindros (base)
-  // Arco direito: espelho do esquerdo
-  // Coroa elíptica: a=0.26, b=0.065, centro em dy=-0.175
-  // θ de 88° (topo) a 8° (lateral) — ângulos medidos a partir do eixo horizontal
-  const defaults = [
-    // Arco esquerdo
-    { shape: 'prisma',   size: 'P', dx: -0.03, dy: -0.265 },
-    { shape: 'prisma',   size: 'M', dx: -0.045, dy: -0.268 },
-    { shape: 'prisma',   size: 'G', dx: -0.063, dy: -0.27 },
-    { shape: 'cubo',     size: 'P', dx: -0.084, dy: -0.249 },
-    { shape: 'cubo',     size: 'M', dx: -0.103, dy: -0.248 },
-    { shape: 'cubo',     size: 'G', dx: -0.128, dy: -0.241 },
-    { shape: 'cilindro', size: 'P', dx: -0.145, dy: -0.225 },
-    { shape: 'cilindro', size: 'M', dx: -0.158, dy: -0.22 },
-    { shape: 'cilindro', size: 'G', dx: -0.177, dy: -0.21 },
+  // Anel em volta do palco, posicionado à mão e exportado pelo SALVAR (.json).
+  // dx/dy são frações da largura/altura do palco medidas a partir do centro,
+  // então o anel acompanha qualquer tamanho de tela.
 
-    // Arco direito (espelho)
-    { shape: 'prisma',   size: 'P', dx:  0.01, dy: -0.265},
-    { shape: 'prisma',   size: 'M', dx:  0.025, dy: -0.268 },
-    { shape: 'prisma',   size: 'G', dx:  0.044, dy: -0.27 },
-    { shape: 'cubo',     size: 'P', dx:  0.065, dy: -0.249 },
-    { shape: 'cubo',     size: 'M', dx:  0.082, dy: -0.248 },
-    { shape: 'cubo',     size: 'G', dx:  0.105, dy: -0.241 },
-    { shape: 'cilindro', size: 'P', dx:  0.128, dy: -0.229 },
-    { shape: 'cilindro', size: 'M', dx:  0.141, dy: -0.225 },
-    { shape: 'cilindro', size: 'G', dx:  0.160, dy: -0.219 },
+  // Arco superior — do topo para fora: cubos, cilindros, prismas.
+  const PIECES = [
+    // Lado esquerdo
+    { shape: 'cubo',     size: 'P', dx: -0.0248, dy: -0.2584 },
+    { shape: 'cubo',     size: 'M', dx: -0.0469, dy: -0.2552 },
+    { shape: 'cubo',     size: 'G', dx: -0.0786, dy: -0.2513 },
+    { shape: 'cilindro', size: 'P', dx: -0.1040, dy: -0.2435 },
+    { shape: 'cilindro', size: 'M', dx: -0.1238, dy: -0.2388 },
+    { shape: 'cilindro', size: 'G', dx: -0.1471, dy: -0.2309 },
+    { shape: 'prisma',   size: 'P', dx: -0.1660, dy: -0.2035 },
+    { shape: 'prisma',   size: 'M', dx: -0.1834, dy: -0.1898 },
+    { shape: 'prisma',   size: 'G', dx: -0.2038, dy: -0.1705 },
+
+    // Lado direito
+    { shape: 'cubo',     size: 'P', dx:  0.0275, dy: -0.2568 },
+    { shape: 'cubo',     size: 'M', dx:  0.0517, dy: -0.2560 },
+    { shape: 'cubo',     size: 'G', dx:  0.0778, dy: -0.2537 },
+    { shape: 'cilindro', size: 'P', dx:  0.1032, dy: -0.2427 },
+    { shape: 'cilindro', size: 'M', dx:  0.1218, dy: -0.2388 },
+    { shape: 'cilindro', size: 'G', dx:  0.1432, dy: -0.2348 },
+    { shape: 'prisma',   size: 'P', dx:  0.1660, dy: -0.2035 },
+    { shape: 'prisma',   size: 'M', dx:  0.1834, dy: -0.1898 },
+    { shape: 'prisma',   size: 'G', dx:  0.2038, dy: -0.1705 },
   ]
 
-  for (const p of defaults) {
+  for (const p of PIECES) {
     createPiece(p.shape, p.size, cx + p.dx * w, cy + p.dy * h)
+  }
+
+  // Arco inferior — bases na ordem do arco-íris, da esquerda para a direita.
+  const BASES = [
+    { color: 'vermelho', dx: -0.1697, dy: 0.0986, radius: 43 },
+    { color: 'laranja',  dx: -0.1277, dy: 0.1253, radius: 40 },
+    { color: 'amarelo',  dx: -0.0810, dy: 0.1457, radius: 46 },
+    { color: 'verde',    dx: -0.0327, dy: 0.1582, radius: 46 },
+    { color: 'azul',     dx:  0.0339, dy: 0.1574, radius: 46 },
+    { color: 'rosa',     dx:  0.0849, dy: 0.1448, radius: 46 },
+    { color: 'preto',    dx:  0.1333, dy: 0.1236, radius: 43 },
+    { color: 'branco',   dx:  0.1752, dy: 0.0946, radius: 43 },
+  ]
+
+  for (const b of BASES) {
+    createBase(b.color, cx + b.dx * w, cy + b.dy * h, { radius: b.radius })
   }
 }
 
