@@ -491,26 +491,26 @@ function loadDefaultLayout() {
   // Arco superior — do topo para fora: cubos, cilindros, prismas.
   const PIECES = [
     // Lado esquerdo
-    { shape: 'cubo',     size: 'P', dx: -0.0248, dy: -0.2584 },
-    { shape: 'cubo',     size: 'M', dx: -0.0469, dy: -0.2552 },
-    { shape: 'cubo',     size: 'G', dx: -0.0786, dy: -0.2513 },
-    { shape: 'cilindro', size: 'P', dx: -0.1040, dy: -0.2435 },
-    { shape: 'cilindro', size: 'M', dx: -0.1238, dy: -0.2388 },
-    { shape: 'cilindro', size: 'G', dx: -0.1471, dy: -0.2309 },
-    { shape: 'prisma',   size: 'P', dx: -0.1660, dy: -0.2035 },
-    { shape: 'prisma',   size: 'M', dx: -0.1834, dy: -0.1898 },
-    { shape: 'prisma',   size: 'G', dx: -0.2038, dy: -0.1705 },
+    { shape: 'cubo',     size: 'G', dx: -0.0203, dy: -0.2735 },
+    { shape: 'cubo',     size: 'M', dx: -0.0548, dy: -0.2649 },
+    { shape: 'cubo',     size: 'P', dx: -0.0850, dy: -0.2548 },
+    { shape: 'cilindro', size: 'P', dx: -0.1102, dy: -0.2521 },
+    { shape: 'cilindro', size: 'M', dx: -0.1339, dy: -0.2450 },
+    { shape: 'cilindro', size: 'G', dx: -0.1624, dy: -0.2306 },
+    { shape: 'prisma',   size: 'G', dx: -0.1928, dy: -0.2013 },
+    { shape: 'prisma',   size: 'M', dx: -0.2165, dy: -0.1595 },
+    { shape: 'prisma',   size: 'P', dx: -0.2279, dy: -0.1060 },
 
     // Lado direito
-    { shape: 'cubo',     size: 'P', dx:  0.0275, dy: -0.2568 },
-    { shape: 'cubo',     size: 'M', dx:  0.0517, dy: -0.2560 },
-    { shape: 'cubo',     size: 'G', dx:  0.0778, dy: -0.2537 },
-    { shape: 'cilindro', size: 'P', dx:  0.1032, dy: -0.2427 },
-    { shape: 'cilindro', size: 'M', dx:  0.1218, dy: -0.2388 },
-    { shape: 'cilindro', size: 'G', dx:  0.1432, dy: -0.2348 },
-    { shape: 'prisma',   size: 'P', dx:  0.1660, dy: -0.2035 },
-    { shape: 'prisma',   size: 'M', dx:  0.1834, dy: -0.1898 },
-    { shape: 'prisma',   size: 'G', dx:  0.2038, dy: -0.1705 },
+    { shape: 'cubo',     size: 'G', dx:  0.0203, dy: -0.2735 },
+    { shape: 'cubo',     size: 'M', dx:  0.0548, dy: -0.2649 },
+    { shape: 'cubo',     size: 'P', dx:  0.0850, dy: -0.2548 },
+    { shape: 'cilindro', size: 'P', dx:  0.1102, dy: -0.2521 },
+    { shape: 'cilindro', size: 'M', dx:  0.1339, dy: -0.2450 },
+    { shape: 'cilindro', size: 'G', dx:  0.1624, dy: -0.2306 },
+    { shape: 'prisma',   size: 'G', dx:  0.1928, dy: -0.2013 },
+    { shape: 'prisma',   size: 'M', dx:  0.2165, dy: -0.1595 },
+    { shape: 'prisma',   size: 'P', dx:  0.2279, dy: -0.1060 },
   ]
 
   for (const p of PIECES) {
@@ -519,14 +519,14 @@ function loadDefaultLayout() {
 
   // Arco inferior — bases na ordem do arco-íris, da esquerda para a direita.
   const BASES = [
-    { color: 'vermelho', dx: -0.1697, dy: 0.0986, radius: 43 },
-    { color: 'laranja',  dx: -0.1277, dy: 0.1253, radius: 40 },
-    { color: 'amarelo',  dx: -0.0810, dy: 0.1457, radius: 46 },
-    { color: 'verde',    dx: -0.0327, dy: 0.1582, radius: 46 },
-    { color: 'azul',     dx:  0.0339, dy: 0.1574, radius: 46 },
-    { color: 'rosa',     dx:  0.0849, dy: 0.1448, radius: 46 },
-    { color: 'preto',    dx:  0.1333, dy: 0.1236, radius: 43 },
-    { color: 'branco',   dx:  0.1752, dy: 0.0946, radius: 43 },
+    { color: 'vermelho', dx: -0.2092, dy: 0.0756, radius: 43 },
+    { color: 'laranja',  dx: -0.1620, dy: 0.1181, radius: 40 },
+    { color: 'amarelo',  dx: -0.1049, dy: 0.1494, radius: 46 },
+    { color: 'verde',    dx: -0.0380, dy: 0.1619, radius: 46 },
+    { color: 'azul',     dx:  0.0380, dy: 0.1619, radius: 46 },
+    { color: 'rosa',     dx:  0.1049, dy: 0.1494, radius: 46 },
+    { color: 'preto',    dx:  0.1620, dy: 0.1181, radius: 43 },
+    { color: 'branco',   dx:  0.2092, dy: 0.0756, radius: 43 },
   ]
 
   for (const b of BASES) {
