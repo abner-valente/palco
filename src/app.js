@@ -488,29 +488,29 @@ function loadDefaultLayout() {
   // dx/dy são frações da largura/altura do palco medidas a partir do centro,
   // então o anel acompanha qualquer tamanho de tela.
 
-  // Arco superior — do topo para fora: cubos, cilindros, prismas.
+  // Arco superior — do topo para fora: cilindros, cubos, prismas.
   const PIECES = [
     // Lado esquerdo
-    { shape: 'cubo',     size: 'G', dx: -0.0203, dy: -0.2735 },
-    { shape: 'cubo',     size: 'M', dx: -0.0548, dy: -0.2649 },
-    { shape: 'cubo',     size: 'P', dx: -0.0850, dy: -0.2548 },
-    { shape: 'cilindro', size: 'P', dx: -0.1102, dy: -0.2521 },
-    { shape: 'cilindro', size: 'M', dx: -0.1339, dy: -0.2450 },
-    { shape: 'cilindro', size: 'G', dx: -0.1624, dy: -0.2306 },
-    { shape: 'prisma',   size: 'G', dx: -0.1928, dy: -0.2013 },
-    { shape: 'prisma',   size: 'M', dx: -0.2165, dy: -0.1595 },
-    { shape: 'prisma',   size: 'P', dx: -0.2279, dy: -0.1060 },
+    { shape: 'cilindro', size: 'G', dx: -0.0194, dy: -0.3075 },
+    { shape: 'cilindro', size: 'M', dx: -0.0555, dy: -0.2921 },
+    { shape: 'cilindro', size: 'P', dx: -0.0882, dy: -0.2758 },
+    { shape: 'cubo',     size: 'P', dx: -0.1173, dy: -0.2515 },
+    { shape: 'cubo',     size: 'M', dx: -0.1523, dy: -0.2353 },
+    { shape: 'cubo',     size: 'G', dx: -0.1977, dy: -0.2080 },
+    { shape: 'prisma',   size: 'G', dx: -0.2290, dy: -0.1682 },
+    { shape: 'prisma',   size: 'M', dx: -0.2416, dy: -0.0944 },
+    { shape: 'prisma',   size: 'P', dx: -0.2379, dy: -0.0229 },
 
     // Lado direito
-    { shape: 'cubo',     size: 'G', dx:  0.0203, dy: -0.2735 },
-    { shape: 'cubo',     size: 'M', dx:  0.0548, dy: -0.2649 },
-    { shape: 'cubo',     size: 'P', dx:  0.0850, dy: -0.2548 },
-    { shape: 'cilindro', size: 'P', dx:  0.1102, dy: -0.2521 },
-    { shape: 'cilindro', size: 'M', dx:  0.1339, dy: -0.2450 },
-    { shape: 'cilindro', size: 'G', dx:  0.1624, dy: -0.2306 },
-    { shape: 'prisma',   size: 'G', dx:  0.1928, dy: -0.2013 },
-    { shape: 'prisma',   size: 'M', dx:  0.2165, dy: -0.1595 },
-    { shape: 'prisma',   size: 'P', dx:  0.2279, dy: -0.1060 },
+    { shape: 'cilindro', size: 'G', dx:  0.0194, dy: -0.3075 },
+    { shape: 'cilindro', size: 'M', dx:  0.0555, dy: -0.2921 },
+    { shape: 'cilindro', size: 'P', dx:  0.0882, dy: -0.2758 },
+    { shape: 'cubo',     size: 'P', dx:  0.1173, dy: -0.2515 },
+    { shape: 'cubo',     size: 'M', dx:  0.1523, dy: -0.2353 },
+    { shape: 'cubo',     size: 'G', dx:  0.1977, dy: -0.2080 },
+    { shape: 'prisma',   size: 'G', dx:  0.2290, dy: -0.1682 },
+    { shape: 'prisma',   size: 'M', dx:  0.2416, dy: -0.0944 },
+    { shape: 'prisma',   size: 'P', dx:  0.2379, dy: -0.0229 },
   ]
 
   for (const p of PIECES) {
