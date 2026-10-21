@@ -278,7 +278,7 @@ authForm.addEventListener("submit", async (evt) => {
   authSubmitBtn.disabled = true
   authSubmitBtn.innerHTML = `<span class="spinner"></span>${label}`
 
-  const { error } =
+  const { data, error } =
     authMode === "login"
       ? await supabaseClient.auth.signInWithPassword({ email, password })
       : await supabaseClient.auth.signUp({ email, password })
@@ -290,6 +290,18 @@ authForm.addEventListener("submit", async (evt) => {
     return
   }
   if (authMode === "signup") {
+    // Quando o email ja tem conta, o Supabase responde 200 e nao envia nada,
+    // de proposito: dizer "esse email ja existe" permitiria descobrir quais
+    // emails estao cadastrados. O sinal e o usuario voltar sem identidades.
+    // So tratamos como repetido se vier array vazio mesmo — se vier undefined,
+    // seguimos o fluxo normal em vez de barrar um cadastro legitimo.
+    const identidades = data?.user?.identities
+    if (Array.isArray(identidades) && identidades.length === 0) {
+      authError.textContent = "Este email ja possui uma conta. Entre com sua senha ou use \"Esqueceu a senha?\" para recuperar o acesso."
+      authSubmitBtn.disabled = false
+      authSubmitBtn.textContent = "Criar conta"
+      return
+    }
     confirmEmailDesc.textContent = `Enviamos um link de confirmação para ${email}. Clique no link para ativar sua conta e então volte aqui para entrar.`
     confirmError.textContent = ""
     btnResend.dataset.email = email
@@ -436,13 +448,14 @@ btnManageBilling.addEventListener("click", async () => {
 })
 
 subscribeBtn.addEventListener("click", async () => {
+  const endpoint = paywallAcao === "portal" ? "create-portal-session" : "create-checkout-session"
   paywallError.textContent = ""
   subscribeBtn.disabled = true
   subscribeBtn.innerHTML = '<span class="spinner"></span>Redirecionando...'
   try {
     const { data: sessionData } = await supabaseClient.auth.getSession()
     const accessToken = sessionData.session?.access_token
-    const res = await fetch(`${FUNCTIONS_URL}/create-checkout-session`, {
+    const res = await fetch(`${FUNCTIONS_URL}/${endpoint}`, {
       method: "POST",
       headers: { Authorization: `Bearer ${accessToken}` },
     })
@@ -450,12 +463,12 @@ subscribeBtn.addEventListener("click", async () => {
     if (body.url) {
       window.location.href = body.url
     } else {
-      throw new Error(body.error || "checkout")
+      throw new Error(body.error || paywallAcao)
     }
   } catch (err) {
     paywallError.textContent = mensagemAmigavel(String(err.message || err))
     subscribeBtn.disabled = false
-    subscribeBtn.textContent = "Assinar agora"
+    subscribeBtn.textContent = ROTULO_ACAO[paywallAcao]
   }
 })
 
@@ -481,6 +494,21 @@ async function isUserBlocked(userId) {
     .maybeSingle()
   return data?.blocked === true
 }
+
+// Mensagem e acao do paywall conforme o status que veio do Stripe.
+// "portal" manda para o portal de cobranca, onde o cliente troca o cartao ou
+// paga a fatura em aberto; "checkout" abre uma assinatura nova. Mandar quem
+// esta inadimplente para o checkout criaria uma segunda assinatura no Stripe.
+const PAYWALL_POR_STATUS = {
+  past_due:           { acao: "portal",   mensagem: "Nao conseguimos confirmar o pagamento da sua assinatura. Atualize a forma de pagamento para voltar a usar o Palco." },
+  unpaid:             { acao: "portal",   mensagem: "Sua assinatura esta com uma fatura em aberto. Regularize o pagamento para voltar a usar o Palco." },
+  incomplete:         { acao: "portal",   mensagem: "O pagamento da sua assinatura ainda nao foi confirmado. Conclua o pagamento para liberar o acesso." },
+  incomplete_expired: { acao: "checkout", mensagem: "O pagamento da sua assinatura nao foi concluido a tempo. Faca uma nova assinatura para voltar a usar o Palco." },
+  canceled:           { acao: "checkout", mensagem: "Sua assinatura foi cancelada. Esperamos te ver de volta em breve!" },
+}
+const PAYWALL_PADRAO = { acao: "checkout", mensagem: "Sua conta ainda nao tem uma assinatura ativa." }
+const ROTULO_ACAO = { portal: "Regularizar pagamento", checkout: "Assinar agora" }
+let paywallAcao = "checkout"
 
 async function getSubscriptionInfo(userId) {
   const { data } = await supabaseClient
@@ -519,13 +547,11 @@ async function refreshAccessState() {
       showOnly("app")
     }
   } else {
-    if (status === "canceled") {
-      paywallMessage.textContent = "Sua assinatura foi cancelada. Esperamos te ver de volta em breve!"
-    } else {
-      paywallMessage.textContent = "Sua conta ainda nao tem uma assinatura ativa."
-    }
+    const aviso = PAYWALL_POR_STATUS[status] ?? PAYWALL_PADRAO
+    paywallAcao = aviso.acao
+    paywallMessage.textContent = aviso.mensagem
     subscribeBtn.disabled = false
-    subscribeBtn.textContent = "Assinar agora"
+    subscribeBtn.textContent = ROTULO_ACAO[aviso.acao]
     showOnly("paywall")
   }
 }
