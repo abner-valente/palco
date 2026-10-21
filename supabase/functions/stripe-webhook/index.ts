@@ -73,14 +73,15 @@ async function upsertSubscriptionFromStripe(subscriptionId: string, customerId: 
   const userId = (customer as Stripe.Customer).metadata?.supabase_user_id;
   if (!userId) return null;
 
-  // Se o usuario agendou cancelamento, trata como cancelado imediatamente
-  const statusEfetivo = subscription.cancel_at_period_end ? "canceled" : subscription.status;
-
+  // Grava o status real do Stripe. Cancelamento agendado continua "active" ate
+  // o fim do periodo ja pago: quem cancela no dia 20 tendo pago ate o dia 30
+  // mantem o acesso ate o dia 30. O corte acontece sozinho, porque a checagem
+  // de acesso tambem exige current_period_end no futuro.
   const { error } = await supabaseAdmin.from("subscriptions").upsert({
     user_id: userId,
     stripe_customer_id: customerId,
     stripe_subscription_id: subscription.id,
-    status: statusEfetivo,
+    status: subscription.status,
     current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
     updated_at: new Date().toISOString(),
   });
@@ -89,14 +90,6 @@ async function upsertSubscriptionFromStripe(subscriptionId: string, customerId: 
     throw error;
   }
   return userId;
-}
-
-async function deletarUsuario(userId: string) {
-  const { error } = await supabaseAdmin.auth.admin.deleteUser(userId);
-  if (error) {
-    console.error("Falha ao deletar usuario:", error);
-    throw error;
-  }
 }
 
 Deno.serve(async (req) => {
@@ -135,11 +128,10 @@ Deno.serve(async (req) => {
       break;
     }
     case "customer.subscription.deleted": {
+      // Apenas registra o fim da assinatura. A conta e os dados do usuario
+      // permanecem: ele cai no paywall e pode assinar de novo quando quiser.
       const subscription = event.data.object as Stripe.Subscription;
-      const userId = await upsertSubscriptionFromStripe(subscription.id, subscription.customer as string);
-      if (userId) {
-        await deletarUsuario(userId);
-      }
+      await upsertSubscriptionFromStripe(subscription.id, subscription.customer as string);
       break;
     }
     default:
