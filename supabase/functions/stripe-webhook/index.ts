@@ -40,7 +40,7 @@ async function enviarEmailBoasVindas(email: string, periodoFim: Date) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "onboarding@resend.dev",
+      from: "Palco de Papeis <noreply@palcodepapeis.com.br>",
       to: [email],
       subject: "Bem-vindo ao Palco de Papeis!",
       html: `
