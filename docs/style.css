@@ -383,11 +383,29 @@ html, body {
 }
 .piece .shape-fallback { width: 100%; height: 100%; }
 
-.piece .label-text {
-  position: absolute; top: 50%; left: 50%;
+.piece .label-text, .base .label-text {
+  position: absolute; left: 50%;
   transform: translate(-50%, -50%);
-  font-weight: bold; font-size: 13px; color: #1a1a1a;
+  font-weight: bold; font-size: 13px;
   pointer-events: none; text-align: center; white-space: nowrap;
+}
+
+.piece .label-text { top: 50%; color: #1a1a1a; }
+
+/* Na base, a elipse colorida ocupa os 60% de cima da caixa, entao o centro
+   dela fica em 30%. Texto branco com contorno escuro para continuar legivel
+   em qualquer uma das oito cores, inclusive no preto e no branco. */
+.base .label-text {
+  top: 30%;
+  color: #fff;
+  text-shadow: 0 0 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.7), 0 1px 1px rgba(0,0,0,0.9);
+}
+
+/* Nas duas bases claras o branco rende pouco, mesmo com contorno. */
+.base[data-color="branco"] .label-text,
+.base[data-color="amarelo"] .label-text {
+  color: #1a1a1a;
+  text-shadow: 0 0 3px rgba(255,255,255,0.95), 0 0 6px rgba(255,255,255,0.7);
 }
 .base .base-fallback { width: 100%; height: 60%; border-radius: 50%; }
 .piece.connect-source { outline: 3px solid #ffdc3c; outline-offset: 4px; border-radius: 50%; }

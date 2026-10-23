@@ -37,7 +37,7 @@ let draggingObj = null
 let draggingNewItem = null
 let connectSourceId = null
 let selectedConnectionId = null
-let editingPieceId = null
+let editingLabel = null // { kind: "piece" | "base", id }
 
 /* ── Refs de DOM — atribuídas em initApp() ── */
 let stageWrapper, itemsLayer, connectionsLayer, colPieces, colBases
@@ -177,7 +177,7 @@ function removePiece(id) {
     if (conn.aId === id || conn.bId === id) { conn.el.remove(); connections.delete(connId) }
   }
   if (connectSourceId === id) connectSourceId = null
-  if (editingPieceId === id) hideLabelEditor()
+  if (editingLabel?.kind === "piece" && editingLabel.id === id) hideLabelEditor()
 }
 
 function attachPieceHandlers(el, id) {
@@ -215,22 +215,26 @@ function attachPieceHandlers(el, id) {
     piece.radius = clamp(piece.radius + delta, MIN_RADIUS, MAX_RADIUS)
     updatePieceVisual(piece)
   }, { passive: false })
-  el.addEventListener("dblclick", (evt) => { evt.preventDefault(); showLabelEditor(id) })
+  el.addEventListener("dblclick", (evt) => { evt.preventDefault(); showLabelEditor("piece", id) })
 }
 
 /* ── Bases ── */
 function createBase(colorName, x, y, options = {}) {
   const id = options.id ?? newId()
   const radius = options.radius ?? BASE_DEFAULT_RADIUS
-  const base = { id, color: colorName, x, y, radius }
+  const base = { id, color: colorName, x, y, radius, label: options.label ?? "" }
   const el = document.createElement("div")
-  el.className = "base"; el.dataset.id = id
+  el.className = "base"; el.dataset.id = id; el.dataset.color = colorName
   const visual = document.createElement("div")
   visual.className = "base-fallback"
   visual.style.background = BASE_COLORS[colorName] || "#999"
   el.appendChild(visual)
+  const labelEl = document.createElement("div")
+  labelEl.className = "label-text"
+  el.appendChild(labelEl)
   itemsLayer.appendChild(el)
   base.el = el
+  base.labelEl = labelEl
   attachBaseHandlers(el, id)
   bases.set(id, base)
   updateBaseVisual(base)
@@ -242,11 +246,13 @@ function updateBaseVisual(base) {
   base.el.style.height = base.radius + "px"
   base.el.style.left = base.x + "px"
   base.el.style.top = base.y + "px"
+  base.labelEl.textContent = base.label
 }
 
 function removeBase(id) {
   const base = bases.get(id)
   if (!base) return
+  if (editingLabel?.kind === "base" && editingLabel.id === id) hideLabelEditor()
   base.el.remove(); bases.delete(id)
 }
 
@@ -269,6 +275,7 @@ function attachBaseHandlers(el, id) {
     if (!draggingObj || draggingObj.id !== id) return
     finishDrag(evt)
   })
+  el.addEventListener("dblclick", (evt) => { evt.preventDefault(); showLabelEditor("base", id) })
   el.addEventListener("contextmenu", (evt) => { evt.preventDefault(); removeBase(id) })
   el.addEventListener("wheel", (evt) => {
     evt.preventDefault()
@@ -347,26 +354,32 @@ function removeConnection(id) {
 }
 
 /* ── Rótulo ── */
-function showLabelEditor(pieceId) {
-  const piece = pieces.get(pieceId)
-  if (!piece) return
-  editingPieceId = pieceId
-  labelInput.value = piece.label
+function showLabelEditor(kind, id) {
+  const item = kind === "piece" ? pieces.get(id) : bases.get(id)
+  if (!item) return
+  editingLabel = { kind, id }
+  labelInput.value = item.label
   labelEditor.classList.remove("hidden")
-  const rect = piece.el.getBoundingClientRect()
+  const rect = item.el.getBoundingClientRect()
   labelEditor.style.left = rect.left + rect.width / 2 - 60 + "px"
   labelEditor.style.top = rect.top - 30 + "px"
   labelInput.focus(); labelInput.select()
 }
 
 function hideLabelEditor() {
-  labelEditor.classList.add("hidden"); editingPieceId = null
+  labelEditor.classList.add("hidden"); editingLabel = null
 }
 
 function commitLabelEditor() {
-  if (editingPieceId === null) return
-  const piece = pieces.get(editingPieceId)
-  if (piece) { piece.label = labelInput.value; updatePieceVisual(piece) }
+  if (!editingLabel) return
+  const { kind, id } = editingLabel
+  if (kind === "piece") {
+    const piece = pieces.get(id)
+    if (piece) { piece.label = labelInput.value; updatePieceVisual(piece) }
+  } else {
+    const base = bases.get(id)
+    if (base) { base.label = labelInput.value; updateBaseVisual(base) }
+  }
   hideLabelEditor()
 }
 
@@ -374,7 +387,7 @@ function commitLabelEditor() {
 function serializeSession() {
   return {
     pieces: [...pieces.values()].map((p) => ({ id: p.id, shape: p.shape, size: p.size, x: p.x, y: p.y, label: p.label, radius: p.radius })),
-    bases:  [...bases.values()].map((b) => ({ id: b.id, color: b.color, x: b.x, y: b.y, radius: b.radius })),
+    bases:  [...bases.values()].map((b) => ({ id: b.id, color: b.color, x: b.x, y: b.y, label: b.label, radius: b.radius })),
     connections: [...connections.values()].map((c) => ({ a: c.aId, b: c.bId })),
   }
 }
@@ -394,7 +407,7 @@ function loadSessionData(data) {
     maxId = Math.max(maxId, pd.id)
   }
   for (const bd of data.bases || []) {
-    createBase(bd.color, bd.x, bd.y, { id: bd.id, radius: bd.radius })
+    createBase(bd.color, bd.x, bd.y, { id: bd.id, radius: bd.radius, label: bd.label || "" })
     maxId = Math.max(maxId, bd.id)
   }
   for (const cd of data.connections || []) createConnection(cd.a, cd.b)
