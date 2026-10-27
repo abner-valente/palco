@@ -25,22 +25,18 @@ const PIECE_SHAPES_SIZES = [
   ["prisma", "P"], ["prisma", "M"], ["prisma", "G"],
 ]
 
-const CONNECTION_CLICK_WIDTH = 9
 
 /* ── Estado (módulo) ── */
 let nextId = 0
 const pieces = new Map()
 const bases = new Map()
-const connections = new Map()
 
 let draggingObj = null
 let draggingNewItem = null
-let connectSourceId = null
-let selectedConnectionId = null
 let editingLabel = null // { kind: "piece" | "base", id }
 
 /* ── Refs de DOM — atribuídas em initApp() ── */
-let stageWrapper, itemsLayer, connectionsLayer, colPieces, colBases
+let stageWrapper, itemsLayer, colPieces, colBases
 let trashEl, stageBg, labelEditor, labelInput
 
 /* ── Utilitários ── */
@@ -163,8 +159,6 @@ function updatePieceVisual(piece) {
   piece.el.style.left = piece.x + "px"
   piece.el.style.top = piece.y + "px"
   piece.labelEl.textContent = piece.label
-  piece.el.classList.toggle("connect-source", connectSourceId === piece.id)
-  refreshConnectionsForPiece(piece.id)
 }
 
 function removePiece(id) {
@@ -173,10 +167,6 @@ function removePiece(id) {
   window.__track?.("peca_removida", { shape: piece.shape, size: piece.size })
   piece.el.remove()
   pieces.delete(id)
-  for (const [connId, conn] of [...connections.entries()]) {
-    if (conn.aId === id || conn.bId === id) { conn.el.remove(); connections.delete(connId) }
-  }
-  if (connectSourceId === id) connectSourceId = null
   if (editingLabel?.kind === "piece" && editingLabel.id === id) hideLabelEditor()
 }
 
@@ -184,7 +174,6 @@ function attachPieceHandlers(el, id) {
   el.addEventListener("pointerdown", (evt) => {
     if (evt.button !== 0) return
     evt.preventDefault(); evt.stopPropagation()
-    selectedConnectionId = null; renderConnectionsStyle()
     draggingObj = { kind: "piece", id }
     el.setPointerCapture(evt.pointerId)
   })
@@ -199,15 +188,8 @@ function attachPieceHandlers(el, id) {
     if (!draggingObj || draggingObj.id !== id) return
     finishDrag(evt)
   })
-  el.addEventListener("contextmenu", (evt) => {
-    evt.preventDefault()
-    if (connectSourceId === null) connectSourceId = id
-    else if (connectSourceId === id) connectSourceId = null
-    else { createConnection(connectSourceId, id); connectSourceId = null }
-    const piece = pieces.get(id)
-    if (piece) updatePieceVisual(piece)
-    for (const p of pieces.values()) updatePieceVisual(p)
-  })
+  // Apenas suprime o menu nativo do navegador sobre a peca.
+  el.addEventListener("contextmenu", (evt) => { evt.preventDefault() })
   el.addEventListener("wheel", (evt) => {
     evt.preventDefault()
     const piece = pieces.get(id)
@@ -260,7 +242,6 @@ function attachBaseHandlers(el, id) {
   el.addEventListener("pointerdown", (evt) => {
     if (evt.button !== 0) return
     evt.preventDefault(); evt.stopPropagation()
-    selectedConnectionId = null; renderConnectionsStyle()
     draggingObj = { kind: "base", id }
     el.setPointerCapture(evt.pointerId)
   })
@@ -305,54 +286,6 @@ function finishDrag(evt) {
   draggingObj = null
 }
 
-/* ── Conexões ── */
-function createConnection(aId, bId, options = {}) {
-  if (aId === bId) return null
-  const id = options.id ?? newId()
-  const line = document.createElementNS("http://www.w3.org/2000/svg", "line")
-  line.dataset.id = id
-  line.setAttribute("stroke", "#f0f0f0")
-  line.setAttribute("stroke-width", String(CONNECTION_CLICK_WIDTH - 4))
-  connectionsLayer.appendChild(line)
-  line.addEventListener("pointerdown", (evt) => {
-    evt.stopPropagation()
-    selectedConnectionId = id; renderConnectionsStyle()
-  })
-  const conn = { id, aId, bId, el: line }
-  connections.set(id, conn)
-  refreshConnectionLine(conn)
-  if (!options.id) window.__track?.("conexao_feita")
-  return conn
-}
-
-function refreshConnectionLine(conn) {
-  const a = pieces.get(conn.aId); const b = pieces.get(conn.bId)
-  if (!a || !b) return
-  conn.el.setAttribute("x1", a.x); conn.el.setAttribute("y1", a.y)
-  conn.el.setAttribute("x2", b.x); conn.el.setAttribute("y2", b.y)
-}
-
-function refreshConnectionsForPiece(pieceId) {
-  for (const conn of connections.values()) {
-    if (conn.aId === pieceId || conn.bId === pieceId) refreshConnectionLine(conn)
-  }
-}
-
-function renderConnectionsStyle() {
-  for (const conn of connections.values()) {
-    const selected = conn.id === selectedConnectionId
-    conn.el.setAttribute("stroke", selected ? "#ffdc3c" : "#f0f0f0")
-    conn.el.setAttribute("stroke-width", String(selected ? CONNECTION_CLICK_WIDTH - 2 : CONNECTION_CLICK_WIDTH - 4))
-  }
-}
-
-function removeConnection(id) {
-  const conn = connections.get(id)
-  if (!conn) return
-  conn.el.remove(); connections.delete(id)
-  if (selectedConnectionId === id) selectedConnectionId = null
-}
-
 /* ── Rótulo ── */
 function showLabelEditor(kind, id) {
   const item = kind === "piece" ? pieces.get(id) : bases.get(id)
@@ -388,14 +321,12 @@ function serializeSession() {
   return {
     pieces: [...pieces.values()].map((p) => ({ id: p.id, shape: p.shape, size: p.size, x: p.x, y: p.y, label: p.label, radius: p.radius })),
     bases:  [...bases.values()].map((b) => ({ id: b.id, color: b.color, x: b.x, y: b.y, label: b.label, radius: b.radius })),
-    connections: [...connections.values()].map((c) => ({ a: c.aId, b: c.bId })),
   }
 }
 
 function clearSession() {
   for (const id of [...pieces.keys()]) removePiece(id)
   for (const id of [...bases.keys()]) removeBase(id)
-  for (const id of [...connections.keys()]) removeConnection(id)
   nextId = 0
 }
 
@@ -410,7 +341,6 @@ function loadSessionData(data) {
     createBase(bd.color, bd.x, bd.y, { id: bd.id, radius: bd.radius, label: bd.label || "" })
     maxId = Math.max(maxId, bd.id)
   }
-  for (const cd of data.connections || []) createConnection(cd.a, cd.b)
   nextId = maxId
 }
 
@@ -422,7 +352,6 @@ function applyZoom(value) {
 export function initApp() {
   stageWrapper     = document.getElementById("stage-wrapper")
   itemsLayer       = document.getElementById("items-layer")
-  connectionsLayer = document.getElementById("connections-layer")
   colPieces        = document.getElementById("col-pieces")
   colBases         = document.getElementById("col-bases")
   trashEl          = document.getElementById("trash")
@@ -442,22 +371,13 @@ export function initApp() {
   document.addEventListener("keydown", (evt) => {
     if (document.activeElement === labelInput) return
     if (evt.key === "Delete" || evt.key === "Backspace") {
-      if (selectedConnectionId !== null) { removeConnection(selectedConnectionId); return }
       const piece = findPieceAt(lastPointerPos)
       if (piece) { removePiece(piece.id); return }
       const base = findBaseAt(lastPointerPos)
       if (base) removeBase(base.id)
-    } else if (evt.key === "Escape") {
-      connectSourceId = null
-      for (const p of pieces.values()) updatePieceVisual(p)
     }
   })
 
-  stageWrapper.addEventListener("pointerdown", (evt) => {
-    if (evt.target === stageWrapper || evt.target === itemsLayer || evt.target.id === "stage-bg-container") {
-      selectedConnectionId = null; renderConnectionsStyle()
-    }
-  })
 
 
   document.getElementById("btn-save").addEventListener("click", () => {
@@ -468,7 +388,7 @@ export function initApp() {
     a.href = url; a.download = "sessao.json"
     document.body.appendChild(a); a.click(); a.remove()
     URL.revokeObjectURL(url)
-    window.__track?.("salvo", { pecas: pieces.size, conexoes: connections.size })
+    window.__track?.("salvo", { pecas: pieces.size, bases: bases.size })
   })
 
   document.getElementById("load-input").addEventListener("change", (evt) => {

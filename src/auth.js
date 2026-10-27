@@ -110,7 +110,6 @@ const APP_BODY_HTML = `
 <section id="stage-section">
   <div id="stage-wrapper">
     <img id="stage-bg" src="/assets/design/cenario-palco.png" alt="Palco">
-    <svg id="connections-layer"></svg>
     <div id="items-layer"></div>
     <div id="top-bar"></div>
     <div id="palette-overlay">
