@@ -1,3 +1,5 @@
+import { t } from './i18n.js'
+
 const SIZE_PX = { P: 18, M: 26, G: 36 }
 const MIN_RADIUS = 14
 const MAX_RADIUS = 100
@@ -400,7 +402,7 @@ export function initApp() {
         loadSessionData(JSON.parse(reader.result))
         window.__track?.("carregado")
       }
-      catch { alert("Arquivo de sessao invalido.") }
+      catch { alert(t("palco.arquivoInvalido")) }
     }
     reader.readAsText(file)
     evt.target.value = ""
