@@ -9,7 +9,17 @@
 <body>
   <div id="loading-overlay">
     <div class="spinner"></div>
-    <span>Carregando...</span>
+    <span data-i18n="comum.carregando">Carregando...</span>
+  </div>
+
+  <!-- Seletor de idioma das telas de login/paywall/perfil. Fica fora dos
+       overlays, fixo na tela, porque quem chega de fora precisa alcancar o
+       idioma ANTES de conseguir ler o cadastro. Dentro do app logado existe
+       outro, no cabecalho (ver APP_BODY_HTML em src/auth.js). -->
+  <div id="lang-switch-auth" class="lang-switch" role="group" data-i18n-aria="idioma.rotulo" aria-label="Idioma">
+    <button type="button" class="lang-opt" data-lang="pt">PT</button>
+    <button type="button" class="lang-opt" data-lang="es">ES</button>
+    <button type="button" class="lang-opt" data-lang="en">EN</button>
   </div>
 
   <!-- ── Auth: Login / Cadastro ── -->
@@ -19,25 +29,25 @@
       <div class="bg-row row-2 green"><span>A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;</span><span>A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
     </div>
     <form id="auth-form" class="auth-card">
-      <span id="auth-mode-label" style="display:none">Entrar</span>
+      <span id="auth-mode-label" style="display:none" data-i18n="auth.entrar">Entrar</span>
       <img src="/assets/design/frase-sua-historia.png" alt="Sua história, Seu Palco" class="auth-card-title-img">
       <div class="auth-input-wrap">
         <img src="/assets/design/icon-user.png" alt="">
-        <input type="email" id="auth-email" placeholder="Usuário / Email" required autocomplete="email">
+        <input type="email" id="auth-email" data-i18n-placeholder="auth.email" placeholder="Usuário / Email" required autocomplete="email">
       </div>
       <div class="auth-input-wrap">
         <img src="/assets/design/icon-lock.png" alt="">
-        <input type="password" id="auth-password" placeholder="Senha" required autocomplete="current-password" minlength="6">
+        <input type="password" id="auth-password" data-i18n-placeholder="auth.senha" placeholder="Senha" required autocomplete="current-password" minlength="6">
       </div>
       <div class="auth-input-wrap" id="auth-confirm-wrap" style="display:none">
         <img src="/assets/design/icon-lock.png" alt="">
-        <input type="password" id="auth-confirm-password" placeholder="Confirmar senha" minlength="6">
+        <input type="password" id="auth-confirm-password" data-i18n-placeholder="auth.confirmarSenha" placeholder="Confirmar senha" minlength="6">
       </div>
       <p id="auth-error" class="form-error"></p>
       <img src="/assets/design/palco-pecas.png" alt="Palco" class="auth-palco-img">
-      <button type="submit" id="auth-submit" class="btn-primary">Entrar no Palco</button>
-      <a href="#" id="auth-forgot-password" class="auth-link">Esqueceu a senha?</a>
-      <a href="#" id="auth-toggle-mode" class="auth-link" style="font-size:13px; color:#aaa;">Não tem conta? Criar uma</a>
+      <button type="submit" id="auth-submit" class="btn-primary" data-i18n="auth.entrarNoPalco">Entrar no Palco</button>
+      <a href="#" id="auth-forgot-password" class="auth-link" data-i18n="auth.esqueceuSenha">Esqueceu a senha?</a>
+      <a href="#" id="auth-toggle-mode" class="auth-link" style="font-size:13px; color:#aaa;" data-i18n="auth.semConta">Não tem conta? Criar uma</a>
     </form>
   </div>
 
@@ -48,12 +58,12 @@
       <div class="bg-row row-2 green"><span>A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;</span><span>A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
     </div>
     <div class="auth-card">
-      <p class="auth-card-title" style="font-size:20px;">Confirme seu email</p>
+      <p class="auth-card-title" style="font-size:20px;" data-i18n="confirmar.titulo">Confirme seu email</p>
       <p id="confirm-email-desc" style="font-size:13px; color:#ccc; margin:0; font-family:Montserrat,sans-serif;"></p>
-      <p style="font-size:12px; color:#888; margin:0; font-family:Montserrat,sans-serif;">Não recebeu? Verifique a pasta de spam ou reenvie abaixo.</p>
+      <p style="font-size:12px; color:#888; margin:0; font-family:Montserrat,sans-serif;" data-i18n="confirmar.naoRecebeu">Não recebeu? Verifique a pasta de spam ou reenvie abaixo.</p>
       <p id="confirm-error" class="form-error"></p>
-      <button type="button" id="btn-resend" class="btn-primary">Reenviar email</button>
-      <button type="button" id="btn-back-to-login" class="btn-secondary">Voltar ao login</button>
+      <button type="button" id="btn-resend" class="btn-primary" data-i18n="confirmar.reenviar">Reenviar email</button>
+      <button type="button" id="btn-back-to-login" class="btn-secondary" data-i18n="confirmar.voltarLogin">Voltar ao login</button>
     </div>
   </div>
 
@@ -64,17 +74,17 @@
       <div class="bg-row row-2 green"><span>A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;</span><span>A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
     </div>
     <form id="reset-form" class="auth-card">
-      <p class="auth-card-title" style="font-size:22px;">Redefinir senha</p>
+      <p class="auth-card-title" style="font-size:22px;" data-i18n="reset.titulo">Redefinir senha</p>
       <div class="auth-input-wrap">
         <img src="/assets/design/icon-lock.png" alt="">
-        <input type="password" id="reset-new-password" placeholder="Nova senha" required minlength="6" autocomplete="new-password">
+        <input type="password" id="reset-new-password" data-i18n-placeholder="reset.novaSenha" placeholder="Nova senha" required minlength="6" autocomplete="new-password">
       </div>
       <div class="auth-input-wrap">
         <img src="/assets/design/icon-lock.png" alt="">
-        <input type="password" id="reset-confirm-password" placeholder="Confirmar nova senha" required minlength="6" autocomplete="new-password">
+        <input type="password" id="reset-confirm-password" data-i18n-placeholder="reset.confirmarNovaSenha" placeholder="Confirmar nova senha" required minlength="6" autocomplete="new-password">
       </div>
       <p id="reset-error" class="form-error"></p>
-      <button type="submit" id="reset-submit" class="btn-primary">Salvar nova senha</button>
+      <button type="submit" id="reset-submit" class="btn-primary" data-i18n="reset.salvar">Salvar nova senha</button>
     </form>
   </div>
 
@@ -85,10 +95,10 @@
       <div class="bg-row row-2 green"><span>A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;</span><span>A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
     </div>
     <div class="auth-card">
-      <p class="auth-card-title" style="font-size:20px;">Conta suspensa</p>
-      <p style="font-size:13px; color:#ccc; margin:0; font-family:Montserrat,sans-serif;">Sua conta foi suspensa. Entre em contato com o suporte para mais informações.</p>
-      <button type="button" id="btn-logout-blocked" class="btn-secondary">Sair</button>
-      <button type="button" id="blocked-support" class="support-link" data-support-email="thedatabra@gmail.com">Precisa de ajuda? Entre em contato</button>
+      <p class="auth-card-title" style="font-size:20px;" data-i18n="bloqueado.titulo">Conta suspensa</p>
+      <p style="font-size:13px; color:#ccc; margin:0; font-family:Montserrat,sans-serif;" data-i18n="bloqueado.mensagem">Sua conta foi suspensa. Entre em contato com o suporte para mais informações.</p>
+      <button type="button" id="btn-logout-blocked" class="btn-secondary" data-i18n="comum.sair">Sair</button>
+      <button type="button" id="blocked-support" class="support-link" data-support-email="thedatabra@gmail.com" data-i18n="comum.precisaAjuda">Precisa de ajuda? Entre em contato</button>
     </div>
   </div>
 
@@ -100,11 +110,11 @@
     </div>
     <div class="auth-card">
       <img src="/assets/design/frase-sua-historia.png" alt="Sua história, Seu Palco" class="auth-card-title-img">
-      <p id="paywall-message" style="font-size:13px; color:#ccc; margin:0; font-family:Montserrat,sans-serif;">Sua conta ainda não tem uma assinatura ativa.</p>
+      <p id="paywall-message" style="font-size:13px; color:#ccc; margin:0; font-family:Montserrat,sans-serif;" data-i18n="paywall.padrao">Sua conta ainda não tem uma assinatura ativa.</p>
       <p id="paywall-error" class="form-error"></p>
-      <button type="button" id="btn-subscribe" class="btn-primary">Assinar agora</button>
-      <button type="button" id="btn-logout" class="btn-secondary">Sair</button>
-      <button type="button" id="paywall-support" class="support-link" data-support-email="thedatabra@gmail.com">Precisa de ajuda? Entre em contato</button>
+      <button type="button" id="btn-subscribe" class="btn-primary" data-i18n="paywall.assinarAgora">Assinar agora</button>
+      <button type="button" id="btn-logout" class="btn-secondary" data-i18n="comum.sair">Sair</button>
+      <button type="button" id="paywall-support" class="support-link" data-support-email="thedatabra@gmail.com" data-i18n="comum.precisaAjuda">Precisa de ajuda? Entre em contato</button>
     </div>
   </div>
 
@@ -115,38 +125,38 @@
       <div class="bg-row row-2 green"><span>A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;</span><span>A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;A AÇÃO TRANSFORMA&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
     </div>
     <div class="auth-card" style="overflow-y:auto; max-height:90vh;">
-      <p class="auth-card-title" style="font-size:24px;">Meu Perfil</p>
+      <p class="auth-card-title" style="font-size:24px;" data-i18n="perfil.titulo">Meu Perfil</p>
       <div class="auth-input-wrap">
         <img src="/assets/design/icon-user.png" alt="">
-        <input type="email" id="profile-email" placeholder="Email" disabled>
+        <input type="email" id="profile-email" data-i18n-placeholder="perfil.email" placeholder="Email" disabled>
       </div>
-      <p class="auth-section-label">Trocar senha</p>
+      <p class="auth-section-label" data-i18n="perfil.trocarSenha">Trocar senha</p>
       <form id="profile-password-form" style="display:flex;flex-direction:column;gap:10px;">
         <div class="auth-input-wrap">
           <img src="/assets/design/icon-lock.png" alt="">
-          <input type="password" id="profile-new-password" placeholder="Nova Senha" required minlength="6" autocomplete="new-password">
+          <input type="password" id="profile-new-password" data-i18n-placeholder="perfil.novaSenha" placeholder="Nova Senha" required minlength="6" autocomplete="new-password">
         </div>
         <div class="auth-input-wrap">
           <img src="/assets/design/icon-lock.png" alt="">
-          <input type="password" id="profile-confirm-password" placeholder="Confirmar nova senha" required minlength="6" autocomplete="new-password">
+          <input type="password" id="profile-confirm-password" data-i18n-placeholder="perfil.confirmarNovaSenha" placeholder="Confirmar nova senha" required minlength="6" autocomplete="new-password">
         </div>
         <p id="profile-password-message" class="form-error"></p>
-        <button type="submit" class="btn-primary" style="font-size:16px;">Atualizar senha</button>
+        <button type="submit" class="btn-primary" style="font-size:16px;" data-i18n="perfil.atualizarSenha">Atualizar senha</button>
       </form>
-      <p class="auth-section-label">Assinatura</p>
+      <p class="auth-section-label" data-i18n="perfil.assinatura">Assinatura</p>
       <div id="subscription-info" class="subscription-card">
         <div class="sub-row">
-          <span class="sub-label">Status</span>
+          <span class="sub-label" data-i18n="perfil.status">Status</span>
           <span id="sub-status" class="sub-value">—</span>
         </div>
         <div class="sub-row">
-          <span class="sub-label">Próxima renovação</span>
+          <span class="sub-label" data-i18n="perfil.proximaRenovacao">Próxima renovação</span>
           <span id="sub-renewal" class="sub-value">—</span>
         </div>
       </div>
       <p id="profile-billing-message" class="form-error"></p>
-      <button type="button" id="btn-manage-billing" class="btn-secondary" style="font-size:14px;">Gerenciar assinatura no Stripe</button>
-      <button type="button" id="btn-profile-back" class="btn-primary">Voltar ao palco</button>
+      <button type="button" id="btn-manage-billing" class="btn-secondary" style="font-size:14px;" data-i18n="perfil.gerenciarStripe">Gerenciar assinatura no Stripe</button>
+      <button type="button" id="btn-profile-back" class="btn-primary" data-i18n="perfil.voltarPalco">Voltar ao palco</button>
     </div>
   </div>
 
