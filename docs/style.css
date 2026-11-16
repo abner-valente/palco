@@ -576,3 +576,65 @@ html, body {
   align-self: center;
 }
 .footer-support-btn:hover { text-decoration: underline; }
+
+/* ── Seletor de idioma ──
+   Dois no site: o fixo, das telas de login/paywall/perfil, e o do cabecalho
+   do app logado. Mesma aparencia, posicionamento diferente. Discreto de
+   proposito: e um ajuste raro, nao pode competir com a marca nem com o
+   botao de menu. */
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.lang-switch.hidden { display: none; }
+
+/* O fixo precisa de z-index acima dos overlays (que sao 200), senao a tela
+   de login o cobre justamente para quem mais precisa dele. */
+#lang-switch-auth {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 300;
+}
+
+.lang-opt {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px 11px;
+  border-radius: 999px;
+  font-family: Montserrat, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(241, 232, 225, 0.55);
+  line-height: 1;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.lang-opt:hover { color: #F1E8E1; }
+
+.lang-opt.is-active {
+  background: rgba(241, 232, 225, 0.92);
+  color: #141414;
+}
+
+/* Agrupa seletor e botao de menu na ponta direita do cabecalho, sem mexer
+   no space-between que ja posiciona a logo na esquerda. */
+#header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+@media (max-width: 480px) {
+  #lang-switch-auth { top: 10px; right: 10px; }
+  .lang-opt { padding: 5px 8px; font-size: 11px; }
+  #header-right { gap: 8px; }
+}

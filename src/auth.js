@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { initApp } from './app.js'
-import { t, setTexto, traduzirDom, definirIdioma, detectarIdioma, idiomaAtual, LOCALE_HTML } from './i18n.js'
+import { t, setTexto, traduzirDom, definirIdioma, detectarIdioma, idiomaAtual, aoTrocarIdioma, LOCALE_HTML } from './i18n.js'
 
 const supabaseClient = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -19,6 +19,7 @@ const btnBackToLogin = document.getElementById("btn-back-to-login")
 const paywallOverlay = document.getElementById("paywall-overlay")
 const profileOverlay = document.getElementById("profile-overlay")
 const appRoot = document.getElementById("app")
+const langSwitchAuth = document.getElementById("lang-switch-auth")
 const authForm = document.getElementById("auth-form")
 const authEmail = document.getElementById("auth-email")
 const authPassword = document.getElementById("auth-password")
@@ -90,9 +91,16 @@ let appLoaded = false
 const APP_BODY_HTML = `
 <header id="app-header">
   <img id="app-logo" src="/assets/design/logo-palco.png" alt="Palco de Papéis">
-  <button id="menu-toggle" data-i18n-aria="menu.abrir" aria-label="Abrir menu">
-    <img id="menu-icon-img" src="/assets/design/menu-open.png" alt="Menu">
-  </button>
+  <div id="header-right">
+    <div class="lang-switch" role="group" data-i18n-aria="idioma.rotulo" aria-label="Idioma">
+      <button type="button" class="lang-opt" data-lang="pt">PT</button>
+      <button type="button" class="lang-opt" data-lang="es">ES</button>
+      <button type="button" class="lang-opt" data-lang="en">EN</button>
+    </div>
+    <button id="menu-toggle" data-i18n-aria="menu.abrir" aria-label="Abrir menu">
+      <img id="menu-icon-img" src="/assets/design/menu-open.png" alt="Menu">
+    </button>
+  </div>
 </header>
 
 <div id="side-menu-overlay" class="hidden"></div>
@@ -153,6 +161,7 @@ async function ensureAppLoaded() {
   if (appLoaded) return
   document.getElementById("app-body").innerHTML = APP_BODY_HTML
   traduzirDom(document.getElementById("app-body"))
+  marcarIdiomaAtivo()
 
   // Resolve refs dinâmicas após injeção do HTML
   userEmailLabel = null // email removido do menu
@@ -214,6 +223,10 @@ function showOnly(view) {
   blockedOverlay.classList.toggle("hidden", view !== "blocked")
   profileOverlay.classList.toggle("hidden", view !== "profile")
   appRoot.classList.toggle("hidden", view !== "app")
+  // No app logado quem manda e o seletor do cabecalho; o fixo sairia por
+  // cima do botao de menu. Nas demais telas (inclusive o perfil, que e um
+  // overlay por cima do app) o fixo e o unico alcancavel.
+  langSwitchAuth?.classList.toggle("hidden", view === "app")
   if (view === "auth") {
     authSubmitBtn.disabled = false
     setTexto(authSubmitBtn, authMode === "login" ? "auth.entrar" : "auth.criarConta")
@@ -586,6 +599,28 @@ btnLogoutBlocked?.addEventListener("click", async () => {
   await supabaseClient.auth.signOut()
   await refreshAccessState()
 })
+
+/* ── Seletor de idioma ──
+   Existem dois na pagina: o fixo das telas de auth (index.html) e o do
+   cabecalho do app (APP_BODY_HTML). Um unico listener no document atende
+   os dois, inclusive o do cabecalho, que so nasce depois do login. */
+
+document.addEventListener("click", (evt) => {
+  const opcao = evt.target.closest(".lang-opt")
+  if (!opcao) return
+  definirIdioma(opcao.dataset.lang)
+})
+
+/** Marca visualmente qual idioma esta em uso, nos dois seletores. */
+function marcarIdiomaAtivo() {
+  const atual = idiomaAtual()
+  document.querySelectorAll(".lang-opt").forEach((opcao) => {
+    const ativo = opcao.dataset.lang === atual
+    opcao.classList.toggle("is-active", ativo)
+    opcao.setAttribute("aria-pressed", String(ativo))
+  })
+}
+aoTrocarIdioma(marcarIdiomaAtivo)
 
 // Define o idioma antes da primeira tela: a escolha guardada, senao o do
 // navegador, senao portugues. Tambem aplica as traducoes ao HTML estatico.
