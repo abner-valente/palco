@@ -27,12 +27,32 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, content-type",
 };
 
+// Idiomas que o app oferece, nos codigos que o Stripe aceita. O Stripe
+// devolve 400 para codigo fora da lista dele — "es-ES" e "en-US", que o app
+// usa no <html lang>, nao servem aqui. Qualquer outra coisa vira "auto",
+// que deixa o Stripe seguir o navegador do cliente.
+const LOCALES_ACEITOS = new Set(["auto", "pt-BR", "es", "en"]);
+
+async function lerLocale(req: Request): Promise<string> {
+  try {
+    const body = await req.json();
+    const locale = body?.locale;
+    if (typeof locale === "string" && LOCALES_ACEITOS.has(locale)) return locale;
+  } catch {
+    // Sem corpo ou JSON invalido: nao e erro, so nao sabemos o idioma.
+  }
+  return "auto";
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
+    // Le o corpo primeiro: so da para consumir o stream uma vez.
+    const locale = await lerLocale(req);
+
     const authHeader = req.headers.get("Authorization") ?? "";
     const token = authHeader.replace("Bearer ", "");
     const { data: userData, error: userError } = await supabaseAdmin.auth.getUser(token);
@@ -75,6 +95,7 @@ Deno.serve(async (req) => {
       success_url: `${siteUrl}/index.html?checkout=sucesso`,
       cancel_url: `${siteUrl}/index.html?checkout=cancelado`,
       metadata: { supabase_user_id: user.id },
+      locale,
     });
 
     return new Response(JSON.stringify({ url: session.url }), {

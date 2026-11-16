@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { initApp } from './app.js'
-import { t, setTexto, traduzirDom, definirIdioma, detectarIdioma, idiomaAtual, aoTrocarIdioma, LOCALE_HTML } from './i18n.js'
+import { t, setTexto, traduzirDom, definirIdioma, detectarIdioma, idiomaAtual, aoTrocarIdioma, LOCALE_HTML, LOCALE_STRIPE } from './i18n.js'
 
 const supabaseClient = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -294,7 +294,14 @@ authForm.addEventListener("submit", async (evt) => {
   const { data, error } =
     authMode === "login"
       ? await supabaseClient.auth.signInWithPassword({ email, password })
-      : await supabaseClient.auth.signUp({ email, password })
+      // O idioma vai no metadata do usuario para o template de email do
+      // Supabase saber em que lingua escrever ({{ .Data.lang }}). E a unica
+      // via: o Supabase monta o email no servidor, sem ver a tela.
+      : await supabaseClient.auth.signUp({
+          email,
+          password,
+          options: { data: { lang: idiomaAtual() } },
+        })
 
   if (error) {
     authError.textContent = mensagemAmigavel(error.message)
@@ -445,7 +452,8 @@ btnManageBilling.addEventListener("click", async () => {
     const accessToken = sessionData.session?.access_token
     const res = await fetch(`${FUNCTIONS_URL}/create-portal-session`, {
       method: "POST",
-      headers: { Authorization: `Bearer ${accessToken}` },
+      headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ locale: LOCALE_STRIPE[idiomaAtual()] }),
     })
     const body = await res.json()
     if (body.url) {
@@ -470,7 +478,8 @@ subscribeBtn.addEventListener("click", async () => {
     const accessToken = sessionData.session?.access_token
     const res = await fetch(`${FUNCTIONS_URL}/${endpoint}`, {
       method: "POST",
-      headers: { Authorization: `Bearer ${accessToken}` },
+      headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ locale: LOCALE_STRIPE[idiomaAtual()] }),
     })
     const body = await res.json()
     if (body.url) {

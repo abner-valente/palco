@@ -25,11 +25,70 @@ const supabaseAdmin = createClient(
 
 const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
 
-async function enviarEmailBoasVindas(email: string, periodoFim: Date) {
+// Textos do email de boas-vindas nos tres idiomas do app. O idioma vem do
+// metadata do usuario, gravado no cadastro. Usuario sem idioma gravado —
+// qualquer um que se cadastrou antes de existir essa opcao — cai no
+// portugues, que e o comportamento que ele ja tinha.
+const TEXTOS_BOAS_VINDAS = {
+  pt: {
+    locale: "pt-BR",
+    assunto: "Bem-vindo ao Palco de Papeis!",
+    titulo: "Bem-vindo ao Palco de Papeis! 🎭",
+    intro: "Sua assinatura foi confirmada com sucesso. A partir de agora voce tem acesso completo ao app.",
+    status: "Status",
+    ativo: "Ativo",
+    renovacao: "Proxima renovacao",
+    acesso: "Para acessar o app,",
+    acessoLink: "clique aqui",
+    gerenciar: "Para gerenciar ou cancelar sua assinatura, acesse seu perfil dentro do app.",
+    rodape: "Voce esta recebendo este e-mail porque realizou uma assinatura no Palco de Papeis.",
+  },
+  es: {
+    locale: "es-ES",
+    assunto: "¡Bienvenido al Palco de Papeis!",
+    titulo: "¡Bienvenido al Palco de Papeis! 🎭",
+    intro: "Su suscripcion fue confirmada con exito. A partir de ahora tiene acceso completo a la aplicacion.",
+    status: "Estado",
+    ativo: "Activa",
+    renovacao: "Proxima renovacion",
+    acesso: "Para acceder a la aplicacion,",
+    acessoLink: "haga clic aqui",
+    gerenciar: "Para gestionar o cancelar su suscripcion, entre en su perfil dentro de la aplicacion.",
+    rodape: "Recibe este correo porque realizo una suscripcion en el Palco de Papeis.",
+  },
+  en: {
+    locale: "en-US",
+    assunto: "Welcome to Palco de Papeis!",
+    titulo: "Welcome to Palco de Papeis! 🎭",
+    intro: "Your subscription has been confirmed. You now have full access to the app.",
+    status: "Status",
+    ativo: "Active",
+    renovacao: "Next renewal",
+    acesso: "To open the app,",
+    acessoLink: "click here",
+    gerenciar: "To manage or cancel your subscription, go to your profile inside the app.",
+    rodape: "You are receiving this email because you subscribed to Palco de Papeis.",
+  },
+} as const;
+
+/** Idioma que o usuario escolheu no cadastro; portugues se nao houver. */
+async function idiomaDoUsuario(userId: string): Promise<keyof typeof TEXTOS_BOAS_VINDAS> {
+  try {
+    const { data } = await supabaseAdmin.auth.admin.getUserById(userId);
+    const lang = data?.user?.user_metadata?.lang;
+    if (lang === "es" || lang === "en") return lang;
+  } catch (err) {
+    console.error("Falha ao ler o idioma do usuario:", err);
+  }
+  return "pt";
+}
+
+async function enviarEmailBoasVindas(email: string, periodoFim: Date, idioma: keyof typeof TEXTOS_BOAS_VINDAS = "pt") {
   const resendKey = Deno.env.get("RESEND_API_KEY") ?? "";
   if (!resendKey) return;
 
-  const dataRenovacao = periodoFim.toLocaleDateString("pt-BR", {
+  const txt = TEXTOS_BOAS_VINDAS[idioma];
+  const dataRenovacao = periodoFim.toLocaleDateString(txt.locale, {
     day: "2-digit", month: "long", year: "numeric",
   });
 
@@ -42,25 +101,25 @@ async function enviarEmailBoasVindas(email: string, periodoFim: Date) {
     body: JSON.stringify({
       from: "Palco de Papeis <noreply@palcodepapeis.com.br>",
       to: [email],
-      subject: "Bem-vindo ao Palco de Papeis!",
+      subject: txt.assunto,
       html: `
         <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;color:#222;">
-          <h2 style="color:#2d5f3c;">Bem-vindo ao Palco de Papeis! 🎭</h2>
-          <p>Sua assinatura foi confirmada com sucesso. A partir de agora voce tem acesso completo ao app.</p>
+          <h2 style="color:#2d5f3c;">${txt.titulo}</h2>
+          <p>${txt.intro}</p>
           <table style="width:100%;border-collapse:collapse;margin:20px 0;">
             <tr>
-              <td style="padding:8px;border:1px solid #ddd;color:#555;">Status</td>
-              <td style="padding:8px;border:1px solid #ddd;font-weight:bold;color:#2d5f3c;">Ativo</td>
+              <td style="padding:8px;border:1px solid #ddd;color:#555;">${txt.status}</td>
+              <td style="padding:8px;border:1px solid #ddd;font-weight:bold;color:#2d5f3c;">${txt.ativo}</td>
             </tr>
             <tr>
-              <td style="padding:8px;border:1px solid #ddd;color:#555;">Proxima renovacao</td>
+              <td style="padding:8px;border:1px solid #ddd;color:#555;">${txt.renovacao}</td>
               <td style="padding:8px;border:1px solid #ddd;">${dataRenovacao}</td>
             </tr>
           </table>
-          <p>Para acessar o app, <a href="${Deno.env.get("SITE_URL") ?? ""}" style="color:#2d5f3c;">clique aqui</a>.</p>
-          <p>Para gerenciar ou cancelar sua assinatura, acesse seu perfil dentro do app.</p>
+          <p>${txt.acesso} <a href="${Deno.env.get("SITE_URL") ?? ""}" style="color:#2d5f3c;">${txt.acessoLink}</a>.</p>
+          <p>${txt.gerenciar}</p>
           <hr style="border:none;border-top:1px solid #eee;margin:24px 0;">
-          <p style="font-size:12px;color:#999;">Voce esta recebendo este e-mail porque realizou uma assinatura no Palco de Papeis.</p>
+          <p style="font-size:12px;color:#999;">${txt.rodape}</p>
         </div>
       `,
     }),
@@ -107,7 +166,7 @@ Deno.serve(async (req) => {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
       if (session.subscription && session.customer) {
-        await upsertSubscriptionFromStripe(
+        const userId = await upsertSubscriptionFromStripe(
           session.subscription as string,
           session.customer as string,
         );
@@ -117,6 +176,7 @@ Deno.serve(async (req) => {
           await enviarEmailBoasVindas(
             customer.email,
             new Date(subscription.current_period_end * 1000),
+            userId ? await idiomaDoUsuario(userId) : "pt",
           );
         }
       }

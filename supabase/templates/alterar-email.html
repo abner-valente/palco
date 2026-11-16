@@ -4,7 +4,22 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="x-apple-disable-message-reformatting" />
-<title>Confirme seu novo endereço de email — Palco de Papéis</title>
+<title>Confirmar novo email — Palco de Papéis</title>
+<!--
+  TRES IDIOMAS NESTE TEMPLATE.
+
+  O Supabase aceita um template por tipo de email, mas usa Go Templates,
+  entao da para ramificar aqui dentro. O idioma vem de .Data.lang, que o
+  app grava no metadata do usuario no cadastro (ver src/auth.js).
+
+  O (printf "%v" .Data.lang) existe por um motivo: quem se cadastrou antes
+  de existir essa opcao nao tem lang nenhum, e comparar nil com string
+  direto no eq pode quebrar o template — e template quebrado significa
+  email nao enviado. O printf transforma qualquer coisa em texto antes.
+
+  O ramo final (else) e sempre o portugues, que e para onde cai todo
+  usuario antigo.
+-->
 <!--[if mso]>
 <style type="text/css">
   body, table, td, a { font-family: Arial, Helvetica, sans-serif !important; }
@@ -25,7 +40,7 @@
 <body style="margin:0; padding:0; background-color:#ffffff;">
 
 <div style="display:none; font-size:1px; color:#ffffff; line-height:1px; max-height:0; max-width:0; opacity:0; overflow:hidden;">
-  Confirme a alteração do endereço de email da sua conta.
+  {{ if eq (printf "%v" .Data.lang) "en" }}Confirm the change of your account's email address.{{ else if eq (printf "%v" .Data.lang) "es" }}Confirme el cambio de la dirección de email de su cuenta.{{ else }}Confirme a alteração do endereço de email da sua conta.{{ end }}
 </div>
 
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;">
@@ -38,12 +53,22 @@
   </td></tr>
 
   <tr><td class="pad" style="padding:32px 40px 0 40px; font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:1.65; color:#231f20;">
-    <p style="margin:0 0 18px 0;">Olá!</p>
-    <p style="margin:0 0 18px 0; font-weight:bold;">Confirme seu novo endereço de email.</p>
-    <p style="margin:0 0 18px 0;">Recebemos um pedido para alterar o endereço de email da sua conta no Palco de Papéis Virtual.</p>
+    {{ if eq (printf "%v" .Data.lang) "en" }}
+      <p style="margin:0 0 18px 0;">Hello!</p>
+      <p style="margin:0 0 18px 0; font-weight:bold;">Confirm your new email address.</p>
+      <p style="margin:0 0 18px 0;">We received a request to change the email address of your Palco de Papéis Virtual account.</p>
+    {{ else if eq (printf "%v" .Data.lang) "es" }}
+      <p style="margin:0 0 18px 0;">¡Hola!</p>
+      <p style="margin:0 0 18px 0; font-weight:bold;">Confirme su nueva dirección de email.</p>
+      <p style="margin:0 0 18px 0;">Recibimos una solicitud para cambiar la dirección de email de su cuenta en el Palco de Papéis Virtual.</p>
+    {{ else }}
+      <p style="margin:0 0 18px 0;">Olá!</p>
+      <p style="margin:0 0 18px 0; font-weight:bold;">Confirme seu novo endereço de email.</p>
+      <p style="margin:0 0 18px 0;">Recebemos um pedido para alterar o endereço de email da sua conta no Palco de Papéis Virtual.</p>
+    {{ end }}
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 4px 0;">
       <tr><td bgcolor="#f0e7de" style="background-color:#f0e7de; padding:14px 18px; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:1.5; color:#231f20;">
-        Novo endereço: <strong>{{ .NewEmail }}</strong>
+        {{ if eq (printf "%v" .Data.lang) "en" }}New address: {{ else if eq (printf "%v" .Data.lang) "es" }}Nueva dirección: {{ else }}Novo endereço: {{ end }}<strong>{{ .NewEmail }}</strong>
       </td></tr>
     </table>
   </td></tr>
@@ -52,14 +77,22 @@
     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
       <tr><td align="center" bgcolor="#f0e7de" style="background-color:#f0e7de;">
         <a href="{{ .ConfirmationURL }}" target="_blank"
-           style="display:inline-block; padding:15px 34px; font-family:Arial,Helvetica,sans-serif; font-size:13px; font-weight:bold; letter-spacing:1.2px; color:#000000; text-decoration:none;">CONFIRMAR NOVO EMAIL</a>
+           style="display:inline-block; padding:15px 34px; font-family:Arial,Helvetica,sans-serif; font-size:13px; font-weight:bold; letter-spacing:1.2px; color:#000000; text-decoration:none;">{{ if eq (printf "%v" .Data.lang) "en" }}CONFIRM NEW EMAIL{{ else if eq (printf "%v" .Data.lang) "es" }}CONFIRMAR NUEVO EMAIL{{ else }}CONFIRMAR NOVO EMAIL{{ end }}</a>
       </td></tr>
     </table>
   </td></tr>
 
   <tr><td class="pad" style="padding:0 40px 34px 40px; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:1.65; color:#5d5a5b;">
-    <p style="margin:0 0 14px 0;">A alteração só vale depois que você clicar no botão acima.</p>
-    <p style="margin:0;">Se não foi você quem pediu, ignore este email: nada será alterado e sua conta continua com o endereço atual.</p>
+    {{ if eq (printf "%v" .Data.lang) "en" }}
+      <p style="margin:0 0 14px 0;">The change only takes effect after you click the button above.</p>
+      <p style="margin:0;">If you didn't ask for this, ignore this email: nothing will change and your account keeps its current address.</p>
+    {{ else if eq (printf "%v" .Data.lang) "es" }}
+      <p style="margin:0 0 14px 0;">El cambio solo tiene efecto después de que haga clic en el botón de arriba.</p>
+      <p style="margin:0;">Si no fue usted quien lo solicitó, ignore este correo: nada será modificado y su cuenta mantiene la dirección actual.</p>
+    {{ else }}
+      <p style="margin:0 0 14px 0;">A alteração só vale depois que você clicar no botão acima.</p>
+      <p style="margin:0;">Se não foi você quem pediu, ignore este email: nada será alterado e sua conta continua com o endereço atual.</p>
+    {{ end }}
   </td></tr>
 
   <tr><td>
@@ -67,7 +100,7 @@
   </td></tr>
 
   <tr><td class="pad" style="padding:22px 40px 34px 40px; font-family:Arial,Helvetica,sans-serif; font-size:11px; line-height:1.6; color:#8b8785; text-align:center;">
-    Se o botão não funcionar, copie e cole este endereço no navegador:<br />
+    {{ if eq (printf "%v" .Data.lang) "en" }}If the button doesn't work, copy and paste this address into your browser:{{ else if eq (printf "%v" .Data.lang) "es" }}Si el botón no funciona, copie y pegue esta dirección en el navegador:{{ else }}Se o botão não funcionar, copie e cole este endereço no navegador:{{ end }}<br />
     <a href="{{ .ConfirmationURL }}" style="color:#8b8785; word-break:break-all;">{{ .ConfirmationURL }}</a>
   </td></tr>
 

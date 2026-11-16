@@ -23,6 +23,11 @@ export const IDIOMA_PADRAO = "pt"
 // Codigo do idioma para o atributo lang do <html> e para formatar datas.
 export const LOCALE_HTML = { pt: "pt-BR", es: "es-ES", en: "en-US" }
 
+// Codigo aceito pelo Stripe nas telas de pagamento e no portal. Nao da para
+// reaproveitar o LOCALE_HTML: a lista do Stripe tem "es" e "en", nao
+// "es-ES" nem "en-US", e ele recusa com erro 400 o que nao estiver nela.
+export const LOCALE_STRIPE = { pt: "pt-BR", es: "es", en: "en" }
+
 const pt = {
   // ── Geral ──
   "meta.tituloPagina": "Palco de Papéis",

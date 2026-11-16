@@ -4,7 +4,25 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="x-apple-disable-message-reformatting" />
-<title>Bem-vindo ao Palco de Papéis Virtual</title>
+<title>Bem-vindo ao Palco de Papéis</title>
+<!--
+  TRES IDIOMAS NESTE TEMPLATE.
+
+  O Supabase aceita um template por tipo de email, mas usa Go Templates,
+  entao da para ramificar aqui dentro. O idioma vem de .Data.lang, que o
+  app grava no metadata do usuario no cadastro (ver src/auth.js).
+
+  O (printf "%v" .Data.lang) existe por um motivo: quem se cadastrou antes
+  de existir essa opcao nao tem lang nenhum, e comparar nil com string
+  direto no eq pode quebrar o template — e template quebrado significa
+  email nao enviado. O printf transforma qualquer coisa em texto antes.
+
+  O ramo final (else) e sempre o portugues, que e para onde cai todo
+  usuario antigo.
+
+  Os banners continuam em portugues nos tres idiomas: sao imagem, e
+  dependem do Marketing gerar as versoes traduzidas.
+-->
 <!--[if mso]>
 <style type="text/css">
   body, table, td, a { font-family: Arial, Helvetica, sans-serif !important; }
@@ -26,7 +44,7 @@
 
 <!-- Resumo que alguns aplicativos mostram ao lado do assunto, antes de abrir -->
 <div style="display:none; font-size:1px; color:#ffffff; line-height:1px; max-height:0; max-width:0; opacity:0; overflow:hidden;">
-  Confirme seu email e comece a usar o Palco de Papéis Virtual.
+  {{ if eq (printf "%v" .Data.lang) "en" }}Confirm your email and start using Palco de Papéis Virtual.{{ else if eq (printf "%v" .Data.lang) "es" }}Confirme su email y empiece a usar el Palco de Papéis Virtual.{{ else }}Confirme seu email e comece a usar o Palco de Papéis Virtual.{{ end }}
 </div>
 
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;">
@@ -41,10 +59,22 @@
 
   <!-- TEXTO 1 -->
   <tr><td class="pad" style="padding:32px 40px 8px 40px; font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:1.65; color:#231f20;">
-    <p style="margin:0 0 18px 0;">Olá! Que bom ter você com a gente!</p>
-    <p style="margin:0 0 18px 0; font-weight:bold;">Seja muito bem-vindo(a) ao Palco de Papéis Virtual!</p>
-    <p style="margin:0 0 18px 0;">Agora, você tem em mãos uma nova maneira de explorar as possibilidades do psicodrama, utilizando os recursos do Palco de Papéis em um ambiente totalmente digital.</p>
-    <p style="margin:0;">Com a ferramenta, você e seus pacientes poderão construir histórias, experimentar diferentes papéis, explorar perspectivas e dar vida a novas possibilidades durante o processo terapêutico. Tudo isso de forma online, interativa e acessível, onde quer que vocês estejam.</p>
+    {{ if eq (printf "%v" .Data.lang) "en" }}
+      <p style="margin:0 0 18px 0;">Hello! We're glad to have you with us!</p>
+      <p style="margin:0 0 18px 0; font-weight:bold;">A warm welcome to Palco de Papéis Virtual!</p>
+      <p style="margin:0 0 18px 0;">You now have a new way to explore the possibilities of psychodrama, using the resources of the Palco de Papéis in a fully digital setting.</p>
+      <p style="margin:0;">With this tool, you and your clients can build stories, try out different roles, explore perspectives and bring new possibilities to life during the therapeutic process — all online, interactive and within reach, wherever you both are.</p>
+    {{ else if eq (printf "%v" .Data.lang) "es" }}
+      <p style="margin:0 0 18px 0;">¡Hola! ¡Qué bueno tenerle con nosotros!</p>
+      <p style="margin:0 0 18px 0; font-weight:bold;">¡Bienvenido(a) al Palco de Papéis Virtual!</p>
+      <p style="margin:0 0 18px 0;">Ahora tiene en sus manos una nueva manera de explorar las posibilidades del psicodrama, utilizando los recursos del Palco de Papéis en un entorno totalmente digital.</p>
+      <p style="margin:0;">Con la herramienta, usted y sus pacientes podrán construir historias, experimentar diferentes roles, explorar perspectivas y dar vida a nuevas posibilidades durante el proceso terapéutico. Todo de forma online, interactiva y accesible, dondequiera que estén.</p>
+    {{ else }}
+      <p style="margin:0 0 18px 0;">Olá! Que bom ter você com a gente!</p>
+      <p style="margin:0 0 18px 0; font-weight:bold;">Seja muito bem-vindo(a) ao Palco de Papéis Virtual!</p>
+      <p style="margin:0 0 18px 0;">Agora, você tem em mãos uma nova maneira de explorar as possibilidades do psicodrama, utilizando os recursos do Palco de Papéis em um ambiente totalmente digital.</p>
+      <p style="margin:0;">Com a ferramenta, você e seus pacientes poderão construir histórias, experimentar diferentes papéis, explorar perspectivas e dar vida a novas possibilidades durante o processo terapêutico. Tudo isso de forma online, interativa e acessível, onde quer que vocês estejam.</p>
+    {{ end }}
   </td></tr>
 
   <!-- BOTAO 1 — confirma o email E leva ao site -->
@@ -52,7 +82,7 @@
     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
       <tr><td align="center" bgcolor="#f0e7de" style="background-color:#f0e7de;">
         <a href="{{ .ConfirmationURL }}" target="_blank"
-           style="display:inline-block; padding:15px 34px; font-family:Arial,Helvetica,sans-serif; font-size:13px; font-weight:bold; letter-spacing:1.2px; color:#000000; text-decoration:none;">ACESSAR MINHA CONTA</a>
+           style="display:inline-block; padding:15px 34px; font-family:Arial,Helvetica,sans-serif; font-size:13px; font-weight:bold; letter-spacing:1.2px; color:#000000; text-decoration:none;">{{ if eq (printf "%v" .Data.lang) "en" }}GO TO MY ACCOUNT{{ else if eq (printf "%v" .Data.lang) "es" }}ACCEDER A MI CUENTA{{ else }}ACESSAR MINHA CONTA{{ end }}</a>
       </td></tr>
     </table>
   </td></tr>
@@ -64,8 +94,16 @@
 
   <!-- TEXTO 2 -->
   <tr><td class="pad" style="padding:32px 40px 8px 40px; font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:1.65; color:#231f20;">
-    <p style="margin:0 0 18px 0; font-weight:bold;">Por onde começar?</p>
-    <p style="margin:0;">Preparamos um tutorial completo para apresentar a plataforma e mostrar como utilizar todos os recursos do Palco de Papéis Virtual.</p>
+    {{ if eq (printf "%v" .Data.lang) "en" }}
+      <p style="margin:0 0 18px 0; font-weight:bold;">Where to start?</p>
+      <p style="margin:0;">We put together a complete tutorial that introduces the platform and shows how to use every feature of Palco de Papéis Virtual.</p>
+    {{ else if eq (printf "%v" .Data.lang) "es" }}
+      <p style="margin:0 0 18px 0; font-weight:bold;">¿Por dónde empezar?</p>
+      <p style="margin:0;">Preparamos un tutorial completo para presentar la plataforma y mostrar cómo utilizar todos los recursos del Palco de Papéis Virtual.</p>
+    {{ else }}
+      <p style="margin:0 0 18px 0; font-weight:bold;">Por onde começar?</p>
+      <p style="margin:0;">Preparamos um tutorial completo para apresentar a plataforma e mostrar como utilizar todos os recursos do Palco de Papéis Virtual.</p>
+    {{ end }}
   </td></tr>
 
   <!-- BOTAO 2 — TROCAR pelo link do video quando chegar -->
@@ -73,16 +111,26 @@
     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
       <tr><td align="center" bgcolor="#f0e7de" style="background-color:#f0e7de;">
         <a href="https://palcodepapeis.com.br" target="_blank"
-           style="display:inline-block; padding:15px 34px; font-family:Arial,Helvetica,sans-serif; font-size:13px; font-weight:bold; letter-spacing:1.2px; color:#000000; text-decoration:none;">ASSISTIR AO TUTORIAL</a>
+           style="display:inline-block; padding:15px 34px; font-family:Arial,Helvetica,sans-serif; font-size:13px; font-weight:bold; letter-spacing:1.2px; color:#000000; text-decoration:none;">{{ if eq (printf "%v" .Data.lang) "en" }}WATCH THE TUTORIAL{{ else if eq (printf "%v" .Data.lang) "es" }}VER EL TUTORIAL{{ else }}ASSISTIR AO TUTORIAL{{ end }}</a>
       </td></tr>
     </table>
   </td></tr>
 
   <!-- TEXTO 3 -->
   <tr><td class="pad" style="padding:0 40px 34px 40px; font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:1.65; color:#231f20;">
-    <p style="margin:0 0 18px 0;">Reserve alguns minutos para conhecer a ferramenta, explorar suas funcionalidades e descobrir as possibilidades que ela oferece para a sua prática.</p>
-    <p style="margin:0 0 18px 0;">Esperamos que essa experiência amplie caminhos, desperte novas perspectivas e torne cada encontro um espaço ainda mais rico de criação e descobertas.</p>
-    <p style="margin:0; font-weight:bold;">Ótima jornada!</p>
+    {{ if eq (printf "%v" .Data.lang) "en" }}
+      <p style="margin:0 0 18px 0;">Set aside a few minutes to get to know the tool, explore its features and discover what it can offer your practice.</p>
+      <p style="margin:0 0 18px 0;">We hope this experience opens up new paths, sparks fresh perspectives and makes every session an even richer space for creation and discovery.</p>
+      <p style="margin:0; font-weight:bold;">Enjoy the journey!</p>
+    {{ else if eq (printf "%v" .Data.lang) "es" }}
+      <p style="margin:0 0 18px 0;">Reserve unos minutos para conocer la herramienta, explorar sus funcionalidades y descubrir las posibilidades que ofrece para su práctica.</p>
+      <p style="margin:0 0 18px 0;">Esperamos que esta experiencia ample caminos, despierte nuevas perspectivas y haga de cada encuentro un espacio aún más rico de creación y descubrimiento.</p>
+      <p style="margin:0; font-weight:bold;">¡Buen viaje!</p>
+    {{ else }}
+      <p style="margin:0 0 18px 0;">Reserve alguns minutos para conhecer a ferramenta, explorar suas funcionalidades e descobrir as possibilidades que ela oferece para a sua prática.</p>
+      <p style="margin:0 0 18px 0;">Esperamos que essa experiência amplie caminhos, desperte novas perspectivas e torne cada encontro um espaço ainda mais rico de criação e descobertas.</p>
+      <p style="margin:0; font-weight:bold;">Ótima jornada!</p>
+    {{ end }}
   </td></tr>
 
   <!-- BANNER 3 -->
@@ -92,9 +140,19 @@
 
   <!-- TEXTO 4 -->
   <tr><td class="pad" style="padding:32px 40px 8px 40px; font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:1.65; color:#231f20;">
-    <p style="margin:0 0 18px 0; font-weight:bold;">Conheça também o livro Palco de Papéis!</p>
-    <p style="margin:0 0 18px 0;">Quer se aprofundar ainda mais nessa abordagem? Conheça o livro Palco de Papéis: a fala que liberta e transforma, uma leitura que apresenta os fundamentos e as possibilidades dessa ferramenta no contexto terapêutico.</p>
-    <p style="margin:0;">Uma oportunidade de ampliar seus conhecimentos e explorar ainda mais o universo do Palco de Papéis.</p>
+    {{ if eq (printf "%v" .Data.lang) "en" }}
+      <p style="margin:0 0 18px 0; font-weight:bold;">Discover the Palco de Papéis book!</p>
+      <p style="margin:0 0 18px 0;">Want to go deeper into this approach? The book <em>Palco de Papéis: a fala que liberta e transforma</em> lays out the foundations of the method and what it makes possible in therapeutic work.</p>
+      <p style="margin:0;">A chance to broaden your knowledge and explore the world of the Palco de Papéis further. The book is available in Portuguese.</p>
+    {{ else if eq (printf "%v" .Data.lang) "es" }}
+      <p style="margin:0 0 18px 0; font-weight:bold;">¡Conozca también el libro Palco de Papéis!</p>
+      <p style="margin:0 0 18px 0;">¿Quiere profundizar en este enfoque? El libro <em>Palco de Papéis: a fala que liberta e transforma</em> presenta los fundamentos y las posibilidades de esta herramienta en el contexto terapéutico.</p>
+      <p style="margin:0;">Una oportunidad de ampliar sus conocimientos y explorar aún más el universo del Palco de Papéis. El libro está disponible en portugués.</p>
+    {{ else }}
+      <p style="margin:0 0 18px 0; font-weight:bold;">Conheça também o livro Palco de Papéis!</p>
+      <p style="margin:0 0 18px 0;">Quer se aprofundar ainda mais nessa abordagem? Conheça o livro Palco de Papéis: a fala que liberta e transforma, uma leitura que apresenta os fundamentos e as possibilidades dessa ferramenta no contexto terapêutico.</p>
+      <p style="margin:0;">Uma oportunidade de ampliar seus conhecimentos e explorar ainda mais o universo do Palco de Papéis.</p>
+    {{ end }}
   </td></tr>
 
   <!-- BOTAO 3 -->
@@ -102,7 +160,7 @@
     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
       <tr><td align="center" bgcolor="#f0e7de" style="background-color:#f0e7de;">
         <a href="https://www.amazon.com.br/dp/8561942533" target="_blank"
-           style="display:inline-block; padding:15px 34px; font-family:Arial,Helvetica,sans-serif; font-size:13px; font-weight:bold; letter-spacing:1.2px; color:#000000; text-decoration:none;">COMPRAR O LIVRO</a>
+           style="display:inline-block; padding:15px 34px; font-family:Arial,Helvetica,sans-serif; font-size:13px; font-weight:bold; letter-spacing:1.2px; color:#000000; text-decoration:none;">{{ if eq (printf "%v" .Data.lang) "en" }}BUY THE BOOK{{ else if eq (printf "%v" .Data.lang) "es" }}COMPRAR EL LIBRO{{ else }}COMPRAR O LIVRO{{ end }}</a>
       </td></tr>
     </table>
   </td></tr>
@@ -114,7 +172,7 @@
 
   <!-- Alternativa para quando o botao nao funciona -->
   <tr><td class="pad" style="padding:22px 40px 34px 40px; font-family:Arial,Helvetica,sans-serif; font-size:11px; line-height:1.6; color:#8b8785; text-align:center;">
-    Se o botão não funcionar, copie e cole este endereço no navegador:<br />
+    {{ if eq (printf "%v" .Data.lang) "en" }}If the button doesn't work, copy and paste this address into your browser:{{ else if eq (printf "%v" .Data.lang) "es" }}Si el botón no funciona, copie y pegue esta dirección en el navegador:{{ else }}Se o botão não funcionar, copie e cole este endereço no navegador:{{ end }}<br />
     <a href="{{ .ConfirmationURL }}" style="color:#8b8785; word-break:break-all;">{{ .ConfirmationURL }}</a>
   </td></tr>
 
