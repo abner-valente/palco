@@ -374,11 +374,17 @@ html, body {
 }
 .piece .shape-fallback { width: 100%; height: 100%; }
 
+/* O rotulo quebra em torno de 12 caracteres por linha. A largura e dada em
+   ch, a medida de um caractere na fonte, entao o limite acompanha o tamanho
+   do texto. O overflow-wrap cobre o nome longo sem espaco, que nao teria
+   onde quebrar sozinho. */
 .piece .label-text, .base .label-text {
   position: absolute; left: 50%;
   transform: translate(-50%, -50%);
-  font-weight: bold; font-size: 13px;
-  pointer-events: none; text-align: center; white-space: nowrap;
+  font-weight: bold; font-size: 13px; line-height: 1.15;
+  pointer-events: none; text-align: center;
+  max-width: 12ch;
+  overflow-wrap: break-word;
 }
 
 .piece .label-text { top: 50%; color: #1a1a1a; }
