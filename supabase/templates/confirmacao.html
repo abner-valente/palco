@@ -106,11 +106,17 @@
     {{ end }}
   </td></tr>
 
-  <!-- BOTAO 2 — TROCAR pelo link do video quando chegar -->
+  <!-- BOTAO 2 — tutorial no YouTube.
+       O link vai sem o parametro ?si=, que o YouTube cola quando se usa o
+       botao Compartilhar: ele identifica a sessao de quem compartilhou e
+       nao tem utilidade nenhuma dentro do email.
+       Um link so para os tres idiomas. O video esta em portugues, entao
+       quem le em espanhol ou ingles clica num botao traduzido e cai num
+       video que nao entende. Fica assim ate haver versao legendada. -->
   <tr><td align="center" style="padding:26px 40px 26px 40px;">
     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
       <tr><td align="center" bgcolor="#f0e7de" style="background-color:#f0e7de;">
-        <a href="https://palcodepapeis.com.br" target="_blank"
+        <a href="https://youtu.be/IJnn8qvt2-Q" target="_blank"
            style="display:inline-block; padding:15px 34px; font-family:Arial,Helvetica,sans-serif; font-size:13px; font-weight:bold; letter-spacing:1.2px; color:#000000; text-decoration:none;">{{ if eq (printf "%v" .Data.lang) "en" }}WATCH THE TUTORIAL{{ else if eq (printf "%v" .Data.lang) "es" }}VER EL TUTORIAL{{ else }}ASSISTIR AO TUTORIAL{{ end }}</a>
       </td></tr>
     </table>
